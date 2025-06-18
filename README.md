@@ -103,7 +103,19 @@ portfolio/
 ├── routes/
 │   └── routes.js            # Application routes
 ├── views/
-│   └── index.ejs           # Main template
+│   ├── partials/           # Reusable template components
+│   │   ├── header.ejs      # Navigation & profile sidebar
+│   │   ├── hero.ejs        # Hero section with typing animation
+│   │   ├── about.ejs       # About section with personal info
+│   │   ├── stats.ejs       # Statistics counters
+│   │   ├── skills.ejs      # Skills progress bars
+│   │   ├── resume.ejs      # Resume/CV section
+│   │   ├── portfolio.ejs   # Portfolio gallery with filters
+│   │   ├── services.ejs    # Services offered section
+│   │   ├── testimonials.ejs # Client testimonials slider
+│   │   ├── contact.ejs     # Contact form and info
+│   │   └── footer.ejs      # Footer with scripts
+│   └── index.ejs           # Main template (includes partials)
 ├── .env                    # Environment variables
 ├── .gitignore             # Git ignore file
 ├── index.js               # Application entry point
@@ -167,13 +179,59 @@ MONGODB_URI=<your-db-url>   # Database connection string
 - Isotope - Layout filtering
 - And more...
 
+## 📄 EJS Template Structure
+
+### Modular Partials System
+The project uses a modular approach with EJS partials for better maintainability:
+
+```javascript
+// Main template (views/index.ejs) includes all partials:
+<%- include('partials/header') %>
+<%- include('partials/hero') %>
+<%- include('partials/about') %>
+<%- include('partials/stats') %>
+<%- include('partials/skills') %>
+<%- include('partials/resume') %>
+<%- include('partials/portfolio') %>
+<%- include('partials/services') %>
+<%- include('partials/testimonials') %>
+<%- include('partials/contact') %>
+<%- include('partials/footer') %>
+```
+
+### Partial Components
+- **`header.ejs`** - Profile sidebar with navigation menu
+- **`hero.ejs`** - Landing section with typed animation
+- **`about.ejs`** - Personal information and description
+- **`stats.ejs`** - Animated counters (clients, projects, etc.)
+- **`skills.ejs`** - Progress bars for technical skills
+- **`resume.ejs`** - Education and work experience
+- **`portfolio.ejs`** - Filterable project gallery
+- **`services.ejs`** - Services offered with icons
+- **`testimonials.ejs`** - Client feedback carousel
+- **`contact.ejs`** - Contact form and information
+- **`footer.ejs`** - Footer with all JavaScript includes
+
+### Benefits of Partials
+- **Maintainability** - Easy to edit individual sections
+- **Reusability** - Components can be reused across pages
+- **Organization** - Cleaner project structure
+- **Development** - Faster development and debugging
+
 ## 🎨 Customization
 
 ### Adding Your Content
 1. **Replace images** in `public/assets/img/`
-2. **Update text content** in `views/index.ejs`
+2. **Update text content** in specific `views/partials/*.ejs` files
 3. **Modify styles** in `public/assets/css/main.css`
 4. **Add custom JavaScript** in `public/assets/js/main.js`
+
+### Editing Specific Sections
+- **Profile Info**: Edit `views/partials/header.ejs` and `views/partials/about.ejs`
+- **Skills**: Update `views/partials/skills.ejs` with your skill levels
+- **Portfolio**: Add your projects in `views/partials/portfolio.ejs`
+- **Services**: Customize offerings in `views/partials/services.ejs`
+- **Contact**: Update contact details in `views/partials/contact.ejs`
 
 ### Color Scheme
 - Primary colors are defined in `main.css`
