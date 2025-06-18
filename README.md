@@ -21,16 +21,22 @@ A modern, responsive portfolio website built with Node.js, Express.js, and Mongo
 - **MongoDB** - Database for contact form data
 - **Mongoose** - MongoDB object modeling
 - **EJS** - Template engine
+- **Body-parser** - Request body parsing middleware
+- **Dotenv** - Environment variables management
 
 ### Frontend
 - **HTML5 & CSS3** - Semantic markup and modern styling
 - **JavaScript (ES6+)** - Modern JavaScript features
 - **Bootstrap 5** - CSS framework for responsive design
+- **Bootstrap Icons** - Icon library
 - **AOS** - Animate On Scroll library
 - **GLightbox** - Modern lightbox library
 - **Swiper** - Touch slider library
 - **Typed.js** - Text typing animation
+- **PureCounter** - Animated counters
+- **Waypoints** - Trigger functions on scroll
 - **Isotope** - Filter and sort layouts
+- **ImagesLoaded** - Image loading detection
 
 ## 🚀 Quick Start
 
@@ -57,9 +63,9 @@ A modern, responsive portfolio website built with Node.js, Express.js, and Mongo
    Create a `.env` file in the root directory:
    ```env
    PORT=3000
-   MONGODB_URI=mongodb://localhost:27017/portfolio
-   # Or use MongoDB Atlas
-   # MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/portfolio
+   MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/portfolio
+   # For local development only (not recommended for production):
+   # MONGODB_URI=mongodb://localhost:27017/portfolio
    ```
 
 4. **Start the application**
@@ -143,19 +149,22 @@ portfolio/
 ## ⚙️ Configuration
 
 ### Database Setup
-1. **Local MongoDB:**
-   - Install MongoDB locally
-   - Set `MONGODB_URI=mongodb://localhost:27017/portfolio`
+**MongoDB Atlas (Cloud) - Recommended:**
+- Create account at [MongoDB Atlas](https://www.mongodb.com/atlas)
+- Create free M0 cluster
+- Create database user and whitelist IP addresses
+- Get connection string and set `MONGODB_URI`
 
-2. **MongoDB Atlas (Cloud):**
-   - Create account at [MongoDB Atlas](https://www.mongodb.com/atlas)
-   - Create cluster and get connection string
-   - Set `MONGODB_URI` with your Atlas connection string
+**Local MongoDB (Development only):**
+- Install MongoDB locally
+- Set `MONGODB_URI=mongodb://localhost:27017/portfolio`
+- Note: Local MongoDB won't work with cloud deployments like Heroku
 
 ### Environment Variables
 ```env
-PORT=3000                    # Server port
-MONGODB_URI=<your-db-url>   # Database connection string
+PORT=3000                    # Server port (Heroku will override this)
+MONGODB_URI=<your-atlas-connection-string>   # MongoDB Atlas connection string
+NODE_ENV=production          # For production deployment
 ```
 
 ## 📦 Dependencies
@@ -170,14 +179,18 @@ MONGODB_URI=<your-db-url>   # Database connection string
 ### Development Dependencies
 - `nodemon` - Development server with auto-restart
 
-### Frontend Libraries
-- Bootstrap 5 - CSS Framework
-- AOS - Animate On Scroll
-- GLightbox - Lightbox gallery
-- Swiper - Touch slider
-- Typed.js - Text animation
-- Isotope - Layout filtering
-- And more...
+### Frontend Libraries (CDN/Vendor)
+- **Bootstrap 5** - CSS Framework
+- **Bootstrap Icons** - Icon library
+- **AOS** - Animate On Scroll
+- **GLightbox** - Lightbox gallery
+- **Swiper** - Touch slider
+- **Typed.js** - Text typing animation
+- **PureCounter** - Animated counters
+- **Waypoints** - Scroll-triggered functions
+- **Isotope** - Layout filtering and sorting
+- **ImagesLoaded** - Image loading detection
+- **PHP Email Form** - Form validation (client-side)
 
 ## 📄 EJS Template Structure
 
@@ -243,7 +256,7 @@ The project uses a modular approach with EJS partials for better maintainability
 
 ## 🚀 Deployment
 
-### 🌐 Heroku (Recommended)
+### 🌐 Heroku Deployment
 
 #### Prerequisites
 - [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)
@@ -265,7 +278,6 @@ The project uses a modular approach with EJS partials for better maintainability
 3. **Set Environment Variables**
    ```bash
    heroku config:set MONGODB_URI="mongodb+srv://username:password@cluster.mongodb.net/portfolio"
-   heroku config:set PORT=3000
    ```
 
 4. **Deploy Application**
@@ -280,13 +292,14 @@ The project uses a modular approach with EJS partials for better maintainability
    heroku open
    ```
 
-#### Heroku Configuration Files
-Create `Procfile` in root directory:
+#### Required Configuration Files
+
+**Procfile** (already included):
 ```
 web: node index.js
 ```
 
-Update `package.json` scripts:
+**package.json** (already configured):
 ```json
 {
   "scripts": {
@@ -300,182 +313,6 @@ Update `package.json` scripts:
 }
 ```
 
-### ⚡ Vercel
-
-#### Setup
-1. **Install Vercel CLI**
-   ```bash
-   npm i -g vercel
-   ```
-
-2. **Deploy**
-   ```bash
-   vercel
-   ```
-
-3. **Configure Environment Variables**
-   - Go to Vercel Dashboard
-   - Add `MONGODB_URI` in Environment Variables
-
-#### Vercel Configuration
-Create `vercel.json`:
-```json
-{
-  "version": 2,
-  "builds": [
-    {
-      "src": "index.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/index.js"
-    }
-  ]
-}
-```
-
-### 🚂 Railway
-
-#### Quick Deploy
-1. Connect GitHub repository to [Railway](https://railway.app)
-2. Set environment variables in Railway dashboard
-3. Deploy automatically from Git
-
-#### Railway Configuration
-```toml
-# railway.toml
-[build]
-builder = "NIXPACKS"
-
-[deploy]
-startCommand = "npm start"
-restartPolicyType = "ON_FAILURE"
-restartPolicyMaxRetries = 10
-```
-
-### 🐳 Docker Deployment
-
-#### Dockerfile
-Create `Dockerfile`:
-```dockerfile
-FROM node:18-alpine
-
-WORKDIR /app
-
-COPY package*.json ./
-RUN npm ci --only=production
-
-COPY . .
-
-EXPOSE 3000
-
-USER node
-
-CMD ["npm", "start"]
-```
-
-#### Docker Compose
-Create `docker-compose.yml`:
-```yaml
-version: '3.8'
-services:
-  app:
-    build: .
-    ports:
-      - "3000:3000"
-    environment:
-      - MONGODB_URI=${MONGODB_URI}
-      - PORT=3000
-    depends_on:
-      - mongodb
-  
-  mongodb:
-    image: mongo:5.0
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongodb_data:/data/db
-
-volumes:
-  mongodb_data:
-```
-
-#### Deploy Commands
-```bash
-# Build and run
-docker-compose up -d
-
-# Stop
-docker-compose down
-```
-
-### ☁️ AWS EC2
-
-#### Instance Setup
-1. **Launch EC2 Instance** (Ubuntu 20.04)
-2. **Connect via SSH**
-3. **Install Dependencies**
-   ```bash
-   sudo apt update
-   sudo apt install nodejs npm nginx mongodb
-   ```
-
-4. **Clone Repository**
-   ```bash
-   git clone <your-repo-url>
-   cd portfolio
-   npm install
-   ```
-
-5. **Configure Environment**
-   ```bash
-   sudo nano .env
-   # Add your environment variables
-   ```
-
-6. **Set up PM2 (Process Manager)**
-   ```bash
-   sudo npm install -g pm2
-   pm2 start index.js --name "portfolio"
-   pm2 startup
-   pm2 save
-   ```
-
-7. **Configure Nginx**
-   ```nginx
-   # /etc/nginx/sites-available/portfolio
-   server {
-       listen 80;
-       server_name your-domain.com;
-       
-       location / {
-           proxy_pass http://localhost:3000;
-           proxy_http_version 1.1;
-           proxy_set_header Upgrade $http_upgrade;
-           proxy_set_header Connection 'upgrade';
-           proxy_set_header Host $host;
-           proxy_cache_bypass $http_upgrade;
-       }
-   }
-   ```
-
-8. **Enable Site**
-   ```bash
-   sudo ln -s /etc/nginx/sites-available/portfolio /etc/nginx/sites-enabled/
-   sudo nginx -t
-   sudo systemctl restart nginx
-   ```
-
-### 🌊 DigitalOcean Droplet
-
-#### One-Click Setup
-1. Create droplet with Node.js one-click app
-2. Follow similar steps as AWS EC2
-3. Use DigitalOcean's domain management
-
 ### 📊 MongoDB Atlas Setup
 
 #### Database Configuration
@@ -487,72 +324,37 @@ docker-compose down
    mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/portfolio?retryWrites=true&w=majority
    ```
 
-### 🔒 Environment Variables
+### 🔧 Environment Variables & Troubleshooting
 
-#### Required Variables
+#### Required Environment Variables
 ```env
-PORT=3000
 MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/portfolio
-NODE_ENV=production
+# PORT is automatically set by Heroku
 ```
 
-#### Security Considerations
-- Never commit `.env` files
-- Use platform-specific secret management
-- Rotate credentials regularly
-- Use HTTPS in production
+#### Common Issues & Solutions
 
-### ✅ Pre-Deployment Checklist
+**Application Error:**
+- Check Heroku logs: `heroku logs --tail`
+- Ensure MongoDB Atlas connection string is correct
+- Verify database user has read/write permissions
 
-- [ ] Test application locally
-- [ ] Set up MongoDB Atlas database
-- [ ] Configure environment variables
-- [ ] Update contact form endpoints
-- [ ] Test contact form functionality
-- [ ] Optimize images and assets
-- [ ] Set up domain name (optional)
-- [ ] Configure SSL certificate
-- [ ] Set up monitoring/logging
+**Database Connection Failed:**
+- Whitelist all IP addresses (0.0.0.0/0) in MongoDB Atlas
+- Check connection string format
+- Ensure database name is included in the URI
 
-### 🚨 Common Issues & Solutions
+**Static Files Not Loading:**
+- Files are served from `public/` directory
+- Check file paths in HTML templates
 
-#### Port Issues
-```javascript
-// Ensure your app uses process.env.PORT
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
-```
-
-#### Database Connection
-```javascript
-// Handle connection errors gracefully
-mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('Database connected'))
-    .catch(err => console.error('Database connection error:', err));
-```
-
-#### Static Files
-```javascript
-// Ensure static files are served correctly
-app.use(express.static(path.join(__dirname, 'public')));
-```
-
-### 📈 Performance Optimization
-
-#### For Production
-- Enable compression middleware
-- Use CDN for static assets
-- Implement caching strategies
-- Monitor application performance
-- Set up health checks
-
-```javascript
-// Add to your app
-const compression = require('compression');
-app.use(compression());
-```
+#### Deployment Checklist
+- [ ] MongoDB Atlas cluster created and configured
+- [ ] Database user created with proper permissions
+- [ ] IP addresses whitelisted (0.0.0.0/0)
+- [ ] Environment variables set in Heroku
+- [ ] Application tested locally
+- [ ] Procfile and package.json configured
 
 ## 🤝 Contributing
 
