@@ -6,17 +6,23 @@
     "start": "node index.js",
     "server": "nodemon index.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["portfolio", "nodejs", "express", "mongodb"],
+  "author": "Sanya Bochoun",
   "license": "ISC",
   "type": "module",
-  "description": "",
+  "description": "A modern portfolio website built with Node.js, Express.js, and MongoDB",
+  "engines": {
+    "node": "18.x",
+    "npm": "9.x"
+  },
   "dependencies": {
     "body-parser": "^1.20.3",
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
-    "mongoose": "^8.9.7",
+    "mongoose": "^8.9.7"
+  },
+  "devDependencies": {
     "nodemon": "^3.1.9"
   }
 }

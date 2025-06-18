@@ -6,17 +6,18 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+// Load environment variables
+dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3000;
 
 // กำหนดให้ Express ใช้งาน body-parser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-
 // กำหนดการเชื่อมต่อฐานข้อมูล
-const DATABASEURL = process.env.DATABAS_URL || 'mongodb://127.0.0.1:27017/portfolio';
+const DATABASEURL = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/portfolio';
 
 if (!DATABASEURL) {
     console.error("❌ DATABASEURL is not defined. Check your .env file.");
