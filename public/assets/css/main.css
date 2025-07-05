@@ -870,6 +870,20 @@ section,
   line-height: 0;
 }
 
+.portfolio .portfolio-content .portfolio-info .live-demo-link {
+  position: absolute;
+  left: calc(50% + 40px);
+  font-size: 26px;
+  top: calc(50% - 14px);
+  color: #fff;
+  transition: 0.3s;
+  line-height: 1.2;
+}
+
+.portfolio .portfolio-content .portfolio-info .live-demo-link:hover {
+  color: var(--accent-color);
+}
+
 .portfolio .portfolio-content:hover .portfolio-info {
   opacity: 1;
 }
