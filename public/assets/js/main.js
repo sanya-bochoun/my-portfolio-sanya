@@ -219,5 +219,58 @@
   window.addEventListener('load', navmenuScrollspy);
   document.addEventListener('scroll', navmenuScrollspy);
 
+  /**
+   * Contact form handler
+   */
+  const contactForm = document.querySelector('.contact-form');
+  if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+      e.preventDefault(); // ป้องกันการ submit แบบปกติ
+      
+      const formData = new FormData(this);
+      const loadingDiv = this.querySelector('.loading');
+      const errorDiv = this.querySelector('.error-message');
+      const sentDiv = this.querySelector('.sent-message');
+      const submitBtn = this.querySelector('button[type="submit"]');
+      
+      // แสดง loading
+      loadingDiv.style.display = 'block';
+      errorDiv.style.display = 'none';
+      sentDiv.style.display = 'none';
+      submitBtn.disabled = true;
+      
+      // ส่งข้อมูลด้วย fetch
+      fetch('/contact', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => {
+        if (response.ok) {
+          // แสดงข้อความสำเร็จ
+          loadingDiv.style.display = 'none';
+          sentDiv.style.display = 'block';
+          this.reset(); // เคลียร์ฟอร์ม
+          
+          // ซ่อนข้อความหลังจาก 5 วินาที
+          setTimeout(() => {
+            sentDiv.style.display = 'none';
+          }, 5000);
+        } else {
+          throw new Error('Network response was not ok');
+        }
+      })
+      .catch(error => {
+        // แสดงข้อความข้อผิดพลาด
+        loadingDiv.style.display = 'none';
+        errorDiv.style.display = 'block';
+        errorDiv.textContent = 'มีข้อผิดพลาดในการส่งข้อความ กรุณาลองใหม่อีกครั้ง';
+        console.error('Error:', error);
+      })
+      .finally(() => {
+        submitBtn.disabled = false;
+      });
+    });
+  }
+
 })();
 
