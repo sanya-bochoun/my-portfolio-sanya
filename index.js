@@ -18,6 +18,9 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// Trust proxy for IP address detection (important for security)
+app.set('trust proxy', true);
+
 // Session configuration
 app.use(session({
     secret: process.env.SESSION_SECRET || 'portfolio-admin-secret-key-2024',

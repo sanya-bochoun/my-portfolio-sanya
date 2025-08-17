@@ -11,6 +11,76 @@ const __dirname = path.dirname(__filename);
 // Admin PIN - ในโปรเจคจริงควรเก็บใน environment variable
 const ADMIN_PIN = process.env.ADMIN_PIN || "1234";
 
+// Security: Login attempt tracking
+const loginAttempts = new Map(); // Store IP -> { attempts, lockoutUntil, lastAttempt }
+const MAX_ATTEMPTS = 5; // Maximum failed attempts before lockout
+const LOCKOUT_DURATION = 15 * 60 * 1000; // 15 minutes lockout
+const RATE_LIMIT_WINDOW = 5 * 60 * 1000; // 5 minutes window for rate limiting
+
+// Helper function to get client IP
+const getClientIP = (req) => {
+    return req.ip || 
+           req.connection.remoteAddress || 
+           req.socket.remoteAddress || 
+           (req.connection.socket ? req.connection.socket.remoteAddress : null) ||
+           req.headers['x-forwarded-for']?.split(',')[0] ||
+           '127.0.0.1';
+};
+
+// Helper function to check if IP is locked out
+const isLockedOut = (ip) => {
+    const attempts = loginAttempts.get(ip);
+    if (!attempts) return false;
+    
+    if (attempts.lockoutUntil && Date.now() < attempts.lockoutUntil) {
+        return true;
+    }
+    
+    // Reset if lockout period has passed
+    if (attempts.lockoutUntil && Date.now() >= attempts.lockoutUntil) {
+        loginAttempts.delete(ip);
+        return false;
+    }
+    
+    return false;
+};
+
+// Helper function to record failed attempt
+const recordFailedAttempt = (ip) => {
+    const now = Date.now();
+    const attempts = loginAttempts.get(ip) || { attempts: 0, lastAttempt: 0 };
+    
+    // Reset attempts if outside rate limit window
+    if (now - attempts.lastAttempt > RATE_LIMIT_WINDOW) {
+        attempts.attempts = 1;
+    } else {
+        attempts.attempts += 1;
+    }
+    
+    attempts.lastAttempt = now;
+    
+    // Lock out if max attempts reached
+    if (attempts.attempts >= MAX_ATTEMPTS) {
+        attempts.lockoutUntil = now + LOCKOUT_DURATION;
+        console.log(`[SECURITY] IP ${ip} locked out for ${LOCKOUT_DURATION/60000} minutes after ${attempts.attempts} failed attempts`);
+    }
+    
+    loginAttempts.set(ip, attempts);
+    
+    // Log suspicious activity
+    console.log(`[SECURITY] Failed login attempt ${attempts.attempts}/${MAX_ATTEMPTS} from IP: ${ip}`);
+    
+    return attempts;
+};
+
+// Helper function to clear successful login
+const clearLoginAttempts = (ip) => {
+    if (loginAttempts.has(ip)) {
+        loginAttempts.delete(ip);
+        console.log(`[SECURITY] Login attempts cleared for IP: ${ip}`);
+    }
+};
+
 // Admin Dashboard
 const adminDashboard = async (req, res) => {
     try {
@@ -47,18 +117,88 @@ const adminDashboard = async (req, res) => {
 
 // Admin Login
 const adminLogin = (req, res) => {
-    res.render('admin/login');
+    const clientIP = getClientIP(req);
+    
+    // Check if IP is currently locked out
+    if (isLockedOut(clientIP)) {
+        const attempts = loginAttempts.get(clientIP);
+        const remainingTime = Math.ceil((attempts.lockoutUntil - Date.now()) / 60000);
+        
+        return res.render('admin/login', {
+            error: `Too many failed attempts. Account locked for ${remainingTime} minutes.`,
+            lockout: true,
+            remainingTime: remainingTime
+        });
+    }
+    
+    res.render('admin/login', {
+        lockout: false
+    });
 };
 
 // Admin Login POST
 const adminLoginPost = (req, res) => {
     const { pin } = req.body;
+    const clientIP = getClientIP(req);
     
-    if (pin === ADMIN_PIN) {
+    // Check if IP is locked out
+    if (isLockedOut(clientIP)) {
+        const attempts = loginAttempts.get(clientIP);
+        const remainingTime = Math.ceil((attempts.lockoutUntil - Date.now()) / 60000);
+        
+        console.log(`[SECURITY] Blocked login attempt from locked IP: ${clientIP}`);
+        return res.render('admin/login', { 
+            error: `Too many failed attempts. Account locked for ${remainingTime} minutes.`,
+            lockout: true,
+            remainingTime: remainingTime
+        });
+    }
+    
+    // Validate PIN input
+    if (!pin || typeof pin !== 'string') {
+        recordFailedAttempt(clientIP);
+        return res.render('admin/login', { 
+            error: 'Invalid PIN format',
+            lockout: false
+        });
+    }
+    
+    // Remove any non-numeric characters for security
+    const cleanPin = pin.replace(/[^0-9]/g, '');
+    
+    // Check PIN length (should be reasonable)
+    if (cleanPin.length < 3 || cleanPin.length > 10) {
+        recordFailedAttempt(clientIP);
+        return res.render('admin/login', { 
+            error: 'Invalid PIN length',
+            lockout: false
+        });
+    }
+    
+    // Check PIN against admin PIN
+    if (cleanPin === ADMIN_PIN) {
+        // Successful login
+        clearLoginAttempts(clientIP);
         req.session.isAdmin = true;
+        
+        console.log(`[SECURITY] Successful admin login from IP: ${clientIP}`);
         res.redirect('/admin');
     } else {
-        res.render('admin/login', { error: 'Invalid PIN' });
+        // Failed login
+        const attempts = recordFailedAttempt(clientIP);
+        
+        let errorMessage = 'Invalid PIN';
+        if (attempts.attempts >= 3) {
+            const remaining = MAX_ATTEMPTS - attempts.attempts;
+            errorMessage = `Invalid PIN. ${remaining} attempts remaining before lockout.`;
+        }
+        
+        res.render('admin/login', { 
+            error: errorMessage,
+            attempts: attempts.attempts,
+            maxAttempts: MAX_ATTEMPTS,
+            lockout: false
+        });
     }
 };
 
@@ -81,7 +221,12 @@ const getProjects = async (req, res) => {
 
 // Add Project Form
 const addProjectForm = (req, res) => {
-    res.render('admin/project-form', { project: null, action: 'add' });
+    const techOptions = {
+        frameworks: ['react', 'nextjs', 'aspnet', 'reactnative', 'django', 'ejs'],
+        languages: ['javascript', 'typescript', 'nodejs', 'csharp', 'python', 'go', 'bun'],
+        projectTypes: ['app', 'website', 'mobileapp']
+    };
+    res.render('admin/project-form', { project: null, action: 'add', techOptions });
 };
 
 // Edit Project Form
@@ -91,7 +236,12 @@ const editProjectForm = async (req, res) => {
         if (!project) {
             return res.status(404).send('Project not found');
         }
-        res.render('admin/project-form', { project, action: 'edit' });
+        const techOptions = {
+            frameworks: ['react', 'nextjs', 'aspnet', 'reactnative', 'django', 'ejs'],
+            languages: ['javascript', 'typescript', 'nodejs', 'csharp', 'python', 'go', 'bun'],
+            projectTypes: ['app', 'website', 'mobileapp']
+        };
+        res.render('admin/project-form', { project, action: 'edit', techOptions });
     } catch (error) {
         console.error('Edit Project Form Error:', error);
         res.status(500).send('Server Error');
@@ -127,20 +277,9 @@ const saveProject = async (req, res) => {
             projectData.mainImage = String(projectData.mainImage || '');
         }
         
-        // Convert comma-separated strings to arrays
-        if (projectData.frameworks) {
-            projectData.technologies = { 
-                ...projectData.technologies,
-                frameworks: projectData.frameworks.split(',').map(f => f.trim()).filter(f => f)
-            };
-        }
-        
-        if (projectData.languages) {
-            projectData.technologies = { 
-                ...projectData.technologies,
-                languages: projectData.languages.split(',').map(l => l.trim()).filter(l => l)
-            };
-        }
+        // Handle technologies data (no longer need to convert from comma-separated)
+        // frameworks and languages now come as arrays from multiple select
+        console.log('Technologies data:', projectData.technologies);
 
         if (id && id !== 'new') {
             // Update existing project

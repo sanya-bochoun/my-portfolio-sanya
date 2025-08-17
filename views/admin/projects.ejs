@@ -4,75 +4,333 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projects Management - Admin Panel</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/assets/img/favicon-s.png">
+    <link rel="shortcut icon" type="image/png" href="/assets/img/favicon-s.png">
+    <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
+        :root {
+            --admin-primary: #149ddd;
+            --admin-secondary: #050d18;
+            --admin-light: #f8f9fa;
+            --admin-dark: #272829;
+            --admin-accent: #0d7aa7;
+        }
+        
+        body {
+            background-color: var(--admin-light);
+            color: var(--admin-dark);
+            font-family: "Roboto", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-accent) 100%) !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 0.5rem 1rem !important; /* Same as other pages */
+            min-height: 56px !important; /* Standard navbar height */
+            max-height: 56px !important; /* Prevent expansion */
+            height: 56px !important; /* Force specific height */
+        }
+        
+        .navbar-brand {
+            color: #ffffff !important;
+            font-weight: 600;
+            font-size: 1.25rem !important;
+            padding: 0.25rem 0 !important; /* Minimal vertical padding */
+            line-height: 1.2 !important;
+            margin: 0 !important;
+        }
+        
+        .navbar .nav-link {
+            color: #ffffff !important;
+            padding: 0.25rem 0.75rem !important; /* Reduced vertical padding */
+            font-weight: 500;
+            line-height: 1.5 !important;
+        }
+        
+        .navbar .btn {
+            border-color: rgba(255, 255, 255, 0.3);
+            color: #ffffff !important;
+            padding: 0.25rem 0.75rem !important; /* Match nav-link padding */
+            font-size: 0.875rem !important;
+            line-height: 1.5 !important;
+            margin: 0 !important;
+        }
+        
+        .navbar .btn:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .navbar .btn-link {
+            border: none !important;
+            background: none !important;
+            text-decoration: none !important;
+        }
+        
+        .navbar-toggler {
+            padding: 0.25rem 0.5rem !important;
+            font-size: 1rem !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        }
+        
         .sidebar {
-            height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .nav-link {
-            color: rgba(255,255,255,0.8);
-            transition: all 0.3s;
-        }
-        .nav-link:hover, .nav-link.active {
-            color: white;
-            background: rgba(255,255,255,0.1);
-            border-radius: 8px;
-        }
-        .main-content {
-            background: #f8f9fa;
             min-height: 100vh;
+            background: linear-gradient(135deg, var(--admin-secondary) 0%, #1a252f 100%);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
         }
+        
+        .sidebar .nav-link {
+            color: #a8a9b4;
+            padding: 12px 20px;
+            margin: 4px 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .sidebar .nav-link.active {
+            color: #ffffff;
+            background: linear-gradient(45deg, var(--admin-primary), var(--admin-accent));
+            box-shadow: 0 2px 8px rgba(20, 157, 221, 0.3);
+        }
+        
+        .sidebar .nav-link:hover {
+            color: #ffffff;
+            background-color: rgba(20, 157, 221, 0.1);
+            transform: translateX(4px);
+        }
+        
+        .sidebar .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
         .card {
             border: none;
-            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--admin-primary), var(--admin-accent));
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, var(--admin-primary), var(--admin-accent));
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(45deg, var(--admin-accent), var(--admin-primary));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(20, 157, 221, 0.4);
+        }
+        
+        .btn-outline-primary {
+            border-color: var(--admin-primary);
+            color: var(--admin-primary);
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--admin-primary);
+            border-color: var(--admin-primary);
+        }
+        
+        .table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .table thead th {
+            background: linear-gradient(135deg, var(--admin-primary), var(--admin-accent));
+            color: white;
+            border: none;
+            font-weight: 600;
+        }
+        
+        .table tbody tr {
+            transition: all 0.2s ease;
+        }
+        
+        .table tbody tr:hover {
+            background-color: rgba(20, 157, 221, 0.05);
+        }
+        
+        .badge {
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        
+        .main-content {
+            background-color: var(--admin-light);
+            min-height: calc(100vh - 56px); /* Account for standard navbar height */
+            padding-top: 1rem;
+        }
+        
+        /* Fix container height */
+        .container-fluid {
+            height: calc(100vh - 56px);
+            padding: 0 !important;
+        }
+        
+        .navbar .container-fluid {
+            padding: 0 1rem !important; /* Restore normal padding for navbar container */
+        }
+        
+        /* Ensure full height coverage */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Project card enhancements */
+        .project-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+        
+        .project-card:hover {
+            border-left-color: var(--admin-primary);
+            background-color: rgba(20, 157, 221, 0.02);
+        }
+        
+        /* Empty state styling */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: #6c757d;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            color: #dee2e6;
+            margin-bottom: 1rem;
+        }
+        
+        .empty-state h4 {
+            color: var(--admin-dark);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        
+        .empty-state p {
+            color: #6c757d;
+            font-size: 0.95rem;
+            max-width: 500px;
+            margin: 0 auto 1.5rem auto;
+            line-height: 1.5;
+        }
+        
+        .empty-state .btn {
+            background: linear-gradient(45deg, var(--admin-primary), var(--admin-accent));
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(20, 157, 221, 0.3);
+        }
+        
+        .empty-state .btn:hover {
+            background: linear-gradient(45deg, var(--admin-accent), var(--admin-primary));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(20, 157, 221, 0.4);
+        }
+        
+        .empty-state .btn i {
+            font-size: 1rem;
+            margin-right: 0.5rem;
+            color: white;
         }
     </style>
 </head>
 <body>
+    <!-- Top Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/admin">
+                <i class="bi bi-speedometer2"></i> Portfolio Admin
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/" target="_blank">
+                    <i class="bi bi-eye"></i> View Site
+                </a>
+                <form action="/admin/logout" method="POST" class="d-inline">
+                    <button class="nav-link btn btn-link text-light" type="submit">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </button>
+                </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 sidebar p-0">
-                <div class="p-4">
-                    <h5 class="text-white mb-4">Admin Panel</h5>
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="position-sticky pt-3">
                     <ul class="nav flex-column">
-                        <li class="nav-item mb-2">
-                            <a href="/admin/dashboard" class="nav-link">
-                                <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin">
+                                <i class="bi bi-house"></i> Dashboard
                             </a>
                         </li>
-                        <li class="nav-item mb-2">
-                            <a href="/admin/projects" class="nav-link active">
-                                <i class="bi bi-folder me-2"></i> Projects
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/admin/projects">
+                                <i class="bi bi-folder"></i> Projects
                             </a>
                         </li>
-                        <li class="nav-item mb-2">
-                            <a href="/admin/contacts" class="nav-link">
-                                <i class="bi bi-envelope me-2"></i> Contacts
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/contacts">
+                                <i class="bi bi-envelope"></i> Contacts
                             </a>
                         </li>
-                        <li class="nav-item mb-2">
-                            <a href="/" target="_blank" class="nav-link">
-                                <i class="bi bi-globe me-2"></i> View Site
-                            </a>
-                        </li>
-                        <li class="nav-item mt-4">
-                            <a href="/admin/logout" class="nav-link text-danger">
-                                <i class="bi bi-box-arrow-right me-2"></i> Logout
+                        <li class="nav-item mt-2">
+                            <a class="nav-link" href="/admin/projects/add">
+                                <i class="bi bi-plus-circle"></i> Add Project
                             </a>
                         </li>
                     </ul>
                 </div>
-            </div>
+            </nav>
 
             <!-- Main Content -->
-            <div class="col-md-9 col-lg-10 main-content p-4">
-                <!-- Header Actions -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <!-- Header -->
+                <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <div>
-                        <h2>Projects Management</h2>
+                        <h1 class="h2">Projects Management</h1>
                         <p class="text-muted">Manage your portfolio projects</p>
                     </div>
                     <div>
@@ -104,8 +362,13 @@
                     </div>
                     <div class="card-body p-0">
                         <% if (!projects || projects.length === 0) { %>
-                            <div class="text-center py-5">
-                                <p class="text-muted">No projects found. <a href="/admin/projects/add">Add your first project</a></p>
+                            <div class="empty-state">
+                                <i class="bi bi-folder-plus"></i>
+                                <h4>No Projects Yet</h4>
+                                <p>You haven't created any projects yet. Start building your portfolio by adding your first project.</p>
+                                <a href="/admin/projects/add" class="btn btn-primary">
+                                    <i class="bi bi-plus-circle"></i>Create Your First Project
+                                </a>
                             </div>
                         <% } else { %>
                             <div class="table-responsive">
@@ -220,6 +483,7 @@
                         </div>
                     </div>
                 </div>
+            </main>
             </div>
         </div>
     </div>

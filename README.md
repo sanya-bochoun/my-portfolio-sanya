@@ -1,26 +1,52 @@
-# 🌟 Portfolio Website
+# 🌟 Portfolio Website with Admin Panel
 
-A modern, responsive portfolio website built with Node.js, Express.js, and MongoDB. Features smooth animations, contact form functionality, and a clean, professional design.
+A modern, responsive portfolio website built with Node.js, Express.js, and MongoDB. Features smooth animations, contact form functionality, dynamic portfolio management, and a comprehensive admin panel with advanced security features.
 
 ## ✨ Features
 
+### 🎨 Frontend Features
 - **Responsive Design** - Works perfectly on all devices (desktop, tablet, mobile)
 - **Smooth Animations** - Beautiful scroll animations using AOS (Animate On Scroll)
+- **Dynamic Portfolio** - Database-driven portfolio with advanced filtering
+- **Portfolio Filters** - Filter by technology, framework, and project type with Bootstrap dropdowns
 - **Contact Form** - Functional contact form with MongoDB integration
 - **Modern UI/UX** - Clean and professional design with Bootstrap 5
 - **Fast Loading** - Optimized assets and vendor libraries
-- **Portfolio Gallery** - Showcase your work with lightbox gallery
+- **Portfolio Gallery** - Showcase your work with lightbox gallery and multiple images
 - **Testimonials** - Client testimonials section
 - **Services** - Highlight your services and skills
+
+### 🛡️ Admin Panel Features
+- **Secure Admin Dashboard** - Comprehensive overview with statistics
+- **Project Management** - Full CRUD operations for portfolio projects
+- **Contact Management** - Manage inquiries with reply functionality
+- **File Upload System** - Support for main images and gallery images
+- **Rich Text Editor** - Quill.js integration for project descriptions
+- **Bulk Operations** - Select and delete multiple items
+- **Real-time Statistics** - Project counts, message status, and more
+- **Email Integration** - Send replies directly from admin panel
+
+### 🔐 Security Features
+- **Rate Limiting** - Prevents brute force attacks (5 attempts per IP)
+- **Account Lockout** - 15-minute lockout after failed attempts
+- **IP Tracking** - Monitor and log login attempts
+- **Input Validation** - Secure PIN validation with pattern detection
+- **Session Management** - Secure admin sessions
+- **Security Logging** - Comprehensive security event logging
+- **CSRF Protection** - Secure form submissions
+- **Countdown Timer** - Visual lockout status with auto-refresh
 
 ## 🛠️ Tech Stack
 
 ### Backend
 - **Node.js** - JavaScript runtime
 - **Express.js** - Web framework
-- **MongoDB** - Database for contact form data
+- **MongoDB** - Database for projects and contact data
 - **Mongoose** - MongoDB object modeling
 - **EJS** - Template engine
+- **Express-session** - Session management
+- **Multer** - File upload handling
+- **Nodemailer** - Email sending functionality
 - **Body-parser** - Request body parsing middleware
 - **Dotenv** - Environment variables management
 
@@ -29,6 +55,8 @@ A modern, responsive portfolio website built with Node.js, Express.js, and Mongo
 - **JavaScript (ES6+)** - Modern JavaScript features
 - **Bootstrap 5** - CSS framework for responsive design
 - **Bootstrap Icons** - Icon library
+- **Quill.js** - Rich text editor for admin panel
+- **SweetAlert2** - Beautiful alert dialogs
 - **AOS** - Animate On Scroll library
 - **GLightbox** - Modern lightbox library
 - **Swiper** - Touch slider library
@@ -37,6 +65,12 @@ A modern, responsive portfolio website built with Node.js, Express.js, and Mongo
 - **Waypoints** - Trigger functions on scroll
 - **Isotope** - Filter and sort layouts
 - **ImagesLoaded** - Image loading detection
+
+### Security & Development
+- **Rate Limiting** - Custom implementation for login protection
+- **Input Sanitization** - Clean and validate user inputs
+- **Security Headers** - Protection against common attacks
+- **Favicon Support** - Custom favicon for admin and public pages
 
 ## 🚀 Quick Start
 
@@ -64,6 +98,15 @@ A modern, responsive portfolio website built with Node.js, Express.js, and Mongo
    ```env
    PORT=3000
    MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/portfolio
+   ADMIN_PIN=1234
+   SESSION_SECRET=portfolio-admin-secret-key-2024
+   
+   # Email Configuration (for contact replies)
+   EMAIL_USER=your-email@gmail.com
+   EMAIL_PASS=your-app-password
+   EMAIL_FROM=your-email@gmail.com
+   EMAIL_FROM_NAME=Your Name
+   
    # For local development only (not recommended for production):
    # MONGODB_URI=mongodb://localhost:27017/portfolio
    ```
@@ -82,73 +125,113 @@ A modern, responsive portfolio website built with Node.js, Express.js, and Mongo
    npm start
    ```
 
-5. **Open your browser**
+5. **Access the application**
    
-   Navigate to `http://localhost:3000`
+   - **Public Portfolio**: `http://localhost:3000`
+   - **Admin Panel**: `http://localhost:3000/admin`
+   - **Default Admin PIN**: `1234` (change in `.env` file)
 
 ## 📁 Project Structure
 
 ```
 portfolio/
 ├── controllers/
-│   └── homeController.js      # Route controllers
+│   ├── homeController.js       # Public routes controller
+│   ├── adminController.js      # Admin panel controller
+│   └── uploadController.js     # File upload controller
 ├── db/
-│   └── connectDB.js          # Database connection
+│   └── connectDB.js           # Database connection
 ├── model/
-│   └── userModel.js          # User/Contact model
+│   ├── userModel.js           # Contact model
+│   └── projectModel.js        # Project model
+├── services/
+│   └── emailService.js        # Email sending service
+├── routes/
+│   ├── routes.js              # Public routes
+│   └── adminRoutes.js         # Admin panel routes
 ├── public/
 │   └── assets/
 │       ├── css/
-│       │   └── main.css      # Custom styles
+│       │   └── main.css       # Custom styles
 │       ├── js/
-│       │   └── main.js       # Custom JavaScript
-│       ├── img/              # Images and icons
-│       │   ├── portfolio/    # Portfolio images
-│       │   └── testimonials/ # Testimonial images
-│       └── vendor/           # Third-party libraries
-├── routes/
-│   └── routes.js            # Application routes
+│       │   └── main.js        # Custom JavaScript
+│       ├── img/               # Images and icons
+│       │   ├── portfolio/     # Portfolio project images
+│       │   ├── testimonials/  # Testimonial images
+│       │   └── Tech Stack/    # Technology icons
+│       ├── resume/            # Resume/CV files
+│       └── vendor/            # Third-party libraries
 ├── views/
-│   ├── partials/           # Reusable template components
-│   │   ├── header.ejs      # Navigation & profile sidebar
-│   │   ├── hero.ejs        # Hero section with typing animation
-│   │   ├── about.ejs       # About section with personal info
-│   │   ├── stats.ejs       # Statistics counters
-│   │   ├── skills.ejs      # Skills progress bars
-│   │   ├── resume.ejs      # Resume/CV section
-│   │   ├── portfolio.ejs   # Portfolio gallery with filters
-│   │   ├── services.ejs    # Services offered section
-│   │   ├── testimonials.ejs # Client testimonials slider
-│   │   ├── contact.ejs     # Contact form and info
-│   │   └── footer.ejs      # Footer with scripts
-│   └── index.ejs           # Main template (includes partials)
-├── .env                    # Environment variables
-├── .gitignore             # Git ignore file
-├── index.js               # Application entry point
-├── package.json           # Dependencies and scripts
-└── README.md             # This file
+│   ├── admin/                 # Admin panel templates
+│   │   ├── layout.ejs         # Admin layout template
+│   │   ├── login.ejs          # Admin login page
+│   │   ├── dashboard.ejs      # Admin dashboard
+│   │   ├── projects.ejs       # Project management
+│   │   ├── project-form.ejs   # Add/Edit project form
+│   │   └── contacts.ejs       # Contact management
+│   ├── partials/              # Public site components
+│   │   ├── header.ejs         # Navigation & profile sidebar
+│   │   ├── hero.ejs          # Hero section with typing animation
+│   │   ├── about.ejs         # About section with personal info
+│   │   ├── stats.ejs         # Statistics counters
+│   │   ├── skills.ejs        # Skills progress bars
+│   │   ├── resume.ejs        # Resume/CV section
+│   │   ├── portfolio.ejs     # Dynamic portfolio gallery
+│   │   ├── services.ejs      # Services offered section
+│   │   ├── testimonials.ejs  # Client testimonials slider
+│   │   ├── contact.ejs       # Contact form and info
+│   │   └── footer.ejs        # Footer with scripts
+│   └── index.ejs             # Main template (includes partials)
+├── uploads/                   # Uploaded project images
+├── .env                      # Environment variables
+├── .gitignore               # Git ignore file
+├── index.js                 # Application entry point
+├── package.json             # Dependencies and scripts
+├── Procfile                 # Heroku deployment file
+└── README.md               # This file
 ```
 
 ## 🎯 Usage
 
-### Homepage
-- Displays your profile, skills, portfolio, services, and contact information
-- Responsive design that works on all devices
-- Smooth scrolling and animations
+### Public Portfolio
+- **Homepage** - Displays your profile, skills, portfolio, services, and contact information
+- **Dynamic Portfolio** - Projects are loaded from database with filtering capabilities
+- **Contact Form** - Stores inquiries in database for admin review
+- **Responsive Design** - Works on all devices with smooth animations
 
-### Contact Form
-- Collects visitor information (name, email, subject, message)
-- Stores data in MongoDB database
-- Form validation and error handling
+### Admin Panel (`/admin`)
 
-### Portfolio Gallery
-- Showcase your work with categories (Apps, Products, Branding, Books)
-- Filterable gallery with smooth transitions
-- Lightbox for detailed view
+#### 🔐 Security Features
+- **Secure Login** - PIN-based authentication with rate limiting
+- **Account Lockout** - Automatic lockout after 5 failed attempts
+- **Session Management** - Secure admin sessions with timeout
+- **IP Tracking** - Monitor login attempts and suspicious activity
+
+#### 📊 Dashboard
+- **Overview Statistics** - Total projects, published status, draft counts
+- **Recent Projects** - Quick access to latest additions
+- **Recent Messages** - Latest contact form submissions
+- **Quick Actions** - Fast navigation to common tasks
+
+#### 📁 Project Management
+- **CRUD Operations** - Create, read, update, delete portfolio projects
+- **Rich Text Editor** - Quill.js for detailed project descriptions
+- **File Upload** - Support for main images and gallery images
+- **Technology Tagging** - Categorize by frameworks, languages, and project types
+- **Status Management** - Draft, published, or hidden projects
+- **Bulk Operations** - Select and manage multiple projects
+
+#### 📧 Contact Management
+- **Message Overview** - View all contact form submissions
+- **Status Tracking** - Unread, read, replied status management
+- **Direct Reply** - Send email replies from admin panel
+- **Message Filtering** - Filter by status and search functionality
+- **Bulk Actions** - Mark as read or delete multiple messages
 
 ## ⚙️ Configuration
 
 ### Database Setup
+
 **MongoDB Atlas (Cloud) - Recommended:**
 - Create account at [MongoDB Atlas](https://www.mongodb.com/atlas)
 - Create free M0 cluster
@@ -158,14 +241,38 @@ portfolio/
 **Local MongoDB (Development only):**
 - Install MongoDB locally
 - Set `MONGODB_URI=mongodb://localhost:27017/portfolio`
-- Note: Local MongoDB won't work with cloud deployments like Heroku
+- Note: Local MongoDB won't work with cloud deployments
 
-### Environment Variables
+### Email Configuration
+
+For contact reply functionality:
+
+**Gmail Setup:**
+1. Enable 2-Step Verification
+2. Generate App Password
+3. Use app password in `EMAIL_PASS` environment variable
+
+**Environment Variables:**
 ```env
-PORT=3000                    # Server port (Heroku will override this)
-MONGODB_URI=<your-atlas-connection-string>   # MongoDB Atlas connection string
-NODE_ENV=production          # For production deployment
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-16-character-app-password
+EMAIL_FROM=your-email@gmail.com
+EMAIL_FROM_NAME=Your Name
 ```
+
+### Security Configuration
+
+**Admin PIN:**
+```env
+ADMIN_PIN=your-secure-pin  # Change default PIN
+SESSION_SECRET=your-unique-session-secret
+```
+
+**Security Settings:**
+- **Max Login Attempts**: 5 per IP address
+- **Lockout Duration**: 15 minutes
+- **Rate Limit Window**: 5 minutes
+- **PIN Requirements**: 3-10 digits, no obvious patterns
 
 ## 📦 Dependencies
 
@@ -173,11 +280,19 @@ NODE_ENV=production          # For production deployment
 - `express` - Web framework
 - `mongoose` - MongoDB ODM
 - `ejs` - Template engine
+- `express-session` - Session management
 - `body-parser` - Request body parsing
+- `multer` - File upload handling
+- `nodemailer` - Email functionality
 - `dotenv` - Environment variables
 
 ### Development Dependencies
 - `nodemon` - Development server with auto-restart
+
+### Admin Panel Libraries
+- **Quill.js** - Rich text editor
+- **SweetAlert2** - Alert dialogs
+- **Bootstrap 5** - Admin UI framework
 
 ### Frontend Libraries (CDN/Vendor)
 - **Bootstrap 5** - CSS Framework
@@ -190,69 +305,29 @@ NODE_ENV=production          # For production deployment
 - **Waypoints** - Scroll-triggered functions
 - **Isotope** - Layout filtering and sorting
 - **ImagesLoaded** - Image loading detection
-- **PHP Email Form** - Form validation (client-side)
-
-## 📄 EJS Template Structure
-
-### Modular Partials System
-The project uses a modular approach with EJS partials for better maintainability:
-
-```javascript
-// Main template (views/index.ejs) includes all partials:
-<%- include('partials/header') %>
-<%- include('partials/hero') %>
-<%- include('partials/about') %>
-<%- include('partials/stats') %>
-<%- include('partials/skills') %>
-<%- include('partials/resume') %>
-<%- include('partials/portfolio') %>
-<%- include('partials/services') %>
-<%- include('partials/testimonials') %>
-<%- include('partials/contact') %>
-<%- include('partials/footer') %>
-```
-
-### Partial Components
-- **`header.ejs`** - Profile sidebar with navigation menu
-- **`hero.ejs`** - Landing section with typed animation
-- **`about.ejs`** - Personal information and description
-- **`stats.ejs`** - Animated counters (clients, projects, etc.)
-- **`skills.ejs`** - Progress bars for technical skills
-- **`resume.ejs`** - Education and work experience
-- **`portfolio.ejs`** - Filterable project gallery
-- **`services.ejs`** - Services offered with icons
-- **`testimonials.ejs`** - Client feedback carousel
-- **`contact.ejs`** - Contact form and information
-- **`footer.ejs`** - Footer with all JavaScript includes
-
-### Benefits of Partials
-- **Maintainability** - Easy to edit individual sections
-- **Reusability** - Components can be reused across pages
-- **Organization** - Cleaner project structure
-- **Development** - Faster development and debugging
 
 ## 🎨 Customization
 
-### Adding Your Content
-1. **Replace images** in `public/assets/img/`
-2. **Update text content** in specific `views/partials/*.ejs` files
-3. **Modify styles** in `public/assets/css/main.css`
-4. **Add custom JavaScript** in `public/assets/js/main.js`
+### Content Management
 
-### Editing Specific Sections
-- **Profile Info**: Edit `views/partials/header.ejs` and `views/partials/about.ejs`
-- **Skills**: Update `views/partials/skills.ejs` with your skill levels
-- **Portfolio**: Add your projects in `views/partials/portfolio.ejs`
-- **Services**: Customize offerings in `views/partials/services.ejs`
-- **Contact**: Update contact details in `views/partials/contact.ejs`
+**Through Admin Panel:**
+- **Projects** - Add/edit portfolio projects with images
+- **Contact Replies** - Manage and respond to inquiries
+- **Content Status** - Control what's visible on public site
 
-### Color Scheme
-- Primary colors are defined in `main.css`
-- Easy to customize by changing CSS variables
+**Direct File Editing:**
+- **Profile Info** - `views/partials/header.ejs` and `views/partials/about.ejs`
+- **Skills** - `views/partials/skills.ejs`
+- **Services** - `views/partials/services.ejs`
+- **Testimonials** - `views/partials/testimonials.ejs`
 
-### Portfolio Items
-- Update portfolio images in `public/assets/img/portfolio/`
-- Modify portfolio content in the EJS template
+### Styling Customization
+- **Main Styles** - `public/assets/css/main.css`
+- **Admin Styles** - Inline styles in admin templates
+- **Color Variables** - CSS custom properties for easy theming
+
+### Tech Stack Icons
+Add your technology icons to `public/assets/img/Tech Stack/` and reference them in the admin panel when creating projects.
 
 ## 🚀 Deployment
 
@@ -261,7 +336,7 @@ The project uses a modular approach with EJS partials for better maintainability
 #### Prerequisites
 - [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)
 - Git repository
-- MongoDB Atlas account (free tier available)
+- MongoDB Atlas account
 
 #### Step-by-Step Guide
 
@@ -278,6 +353,12 @@ The project uses a modular approach with EJS partials for better maintainability
 3. **Set Environment Variables**
    ```bash
    heroku config:set MONGODB_URI="mongodb+srv://username:password@cluster.mongodb.net/portfolio"
+   heroku config:set ADMIN_PIN="your-secure-pin"
+   heroku config:set SESSION_SECRET="your-unique-session-secret"
+   heroku config:set EMAIL_USER="your-email@gmail.com"
+   heroku config:set EMAIL_PASS="your-app-password"
+   heroku config:set EMAIL_FROM="your-email@gmail.com"
+   heroku config:set EMAIL_FROM_NAME="Your Name"
    ```
 
 4. **Deploy Application**
@@ -292,69 +373,59 @@ The project uses a modular approach with EJS partials for better maintainability
    heroku open
    ```
 
-#### Required Configuration Files
+### 🔧 Environment Variables
 
-**Procfile** (already included):
-```
-web: node index.js
-```
-
-**package.json** (already configured):
-```json
-{
-  "scripts": {
-    "start": "node index.js",
-    "server": "nodemon index.js"
-  },
-  "engines": {
-    "node": "18.x",
-    "npm": "9.x"
-  }
-}
-```
-
-### 📊 MongoDB Atlas Setup
-
-#### Database Configuration
-1. **Create Free Cluster** at [MongoDB Atlas](https://www.mongodb.com/atlas)
-2. **Create Database User**
-3. **Whitelist IP Addresses** (0.0.0.0/0 for production)
-4. **Get Connection String**
-   ```
-   mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/portfolio?retryWrites=true&w=majority
-   ```
-
-### 🔧 Environment Variables & Troubleshooting
-
-#### Required Environment Variables
+#### Required for Production
 ```env
 MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/portfolio
-# PORT is automatically set by Heroku
+ADMIN_PIN=your-secure-pin
+SESSION_SECRET=your-unique-session-secret
 ```
 
-#### Common Issues & Solutions
+#### Optional for Email Features
+```env
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-app-password
+EMAIL_FROM=your-email@gmail.com
+EMAIL_FROM_NAME=Your Name
+```
 
-**Application Error:**
-- Check Heroku logs: `heroku logs --tail`
-- Ensure MongoDB Atlas connection string is correct
-- Verify database user has read/write permissions
+## 🔐 Security Best Practices
 
-**Database Connection Failed:**
-- Whitelist all IP addresses (0.0.0.0/0) in MongoDB Atlas
-- Check connection string format
-- Ensure database name is included in the URI
+### Admin Security
+- **Change Default PIN** - Never use default PIN in production
+- **Strong Session Secret** - Use cryptographically secure session secret
+- **Regular Monitoring** - Check admin logs for suspicious activity
+- **IP Whitelisting** - Consider restricting admin access to specific IPs
 
-**Static Files Not Loading:**
-- Files are served from `public/` directory
-- Check file paths in HTML templates
+### Database Security
+- **Atlas Network Access** - Whitelist only necessary IP addresses
+- **Strong Credentials** - Use complex database passwords
+- **Regular Backups** - Enable automated backups in MongoDB Atlas
 
-#### Deployment Checklist
-- [ ] MongoDB Atlas cluster created and configured
-- [ ] Database user created with proper permissions
-- [ ] IP addresses whitelisted (0.0.0.0/0)
-- [ ] Environment variables set in Heroku
-- [ ] Application tested locally
-- [ ] Procfile and package.json configured
+### Email Security
+- **App Passwords** - Use Gmail app passwords, not account password
+- **Environment Variables** - Never commit email credentials to repository
+
+## 🛠️ Advanced Features
+
+### Portfolio Filtering
+- **Technology Filters** - Filter by frameworks and languages
+- **Project Type Filters** - Apps, websites, mobile applications
+- **Dynamic UI** - Bootstrap dropdowns with custom styling
+- **Reset Functionality** - Clear all filters and show all projects
+
+### File Upload System
+- **Image Validation** - File type and size validation
+- **Automatic Resizing** - Optimized for web display
+- **Gallery Support** - Multiple images per project
+- **Secure Storage** - Organized file structure
+
+### Email Integration
+- **HTML Templates** - Rich email formatting
+- **Auto-replies** - Configurable response templates
+- **Status Tracking** - Track sent emails and responses
+- **Error Handling** - Graceful email sending failures
 
 ## 🤝 Contributing
 
@@ -373,11 +444,24 @@ This project is licensed under the ISC License - see the [LICENSE](LICENSE) file
 - [BootstrapMade](https://bootstrapmade.com/) for the original iPortfolio template
 - Bootstrap team for the amazing CSS framework
 - All the open-source library contributors
+- MongoDB Atlas for reliable database hosting
+- Heroku for easy deployment platform
 
 ## 📞 Support
 
 If you have any questions or need help with setup, please create an issue in the repository.
 
+## 🚀 Future Enhancements
+
+- [ ] Multi-language support
+- [ ] Advanced analytics dashboard
+- [ ] Comment system for portfolio items
+- [ ] SEO optimization tools
+- [ ] Advanced user roles and permissions
+- [ ] API endpoints for mobile app integration
+- [ ] Automated backup system
+- [ ] Advanced email templates
+
 ---
 
-**Happy Coding!** 🚀✨ 
+**Happy Coding!** 🚀✨

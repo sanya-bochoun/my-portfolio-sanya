@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= action === 'add' ? 'Add New Project' : 'Edit Project' %> - Portfolio Admin</title>
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/assets/img/favicon-s.png">
+    <link rel="shortcut icon" type="image/png" href="/assets/img/favicon-s.png">
+    <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+    
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -13,31 +18,182 @@
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     
     <style>
-        .sidebar {
-            min-height: 100vh;
-            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+        :root {
+            --admin-primary: #149ddd;
+            --admin-secondary: #050d18;
+            --admin-light: #f8f9fa;
+            --admin-dark: #272829;
+            --admin-accent: #0d7aa7;
         }
+        
+        body {
+            background-color: var(--admin-light);
+            color: var(--admin-dark);
+            font-family: "Roboto", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Global navbar positioning */
+        * {
+            box-sizing: border-box;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-accent) 100%) !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 0.5rem 1rem !important;
+            min-height: 56px !important;
+            max-height: 56px !important;
+            height: 56px !important;
+        }
+        
+        .navbar-brand {
+            color: #ffffff !important;
+            font-weight: 600;
+            font-size: 1.25rem !important;
+            padding: 0.25rem 0 !important;
+            line-height: 1.2 !important;
+            margin: 0 !important;
+        }
+        
+        .navbar .nav-link {
+            color: #ffffff !important;
+            padding: 0.25rem 0.75rem !important;
+            font-weight: 500;
+            line-height: 1.5 !important;
+        }
+        
+        .navbar .btn {
+            border-color: rgba(255, 255, 255, 0.3);
+            color: #ffffff !important;
+            padding: 0.25rem 0.75rem !important;
+            font-size: 0.875rem !important;
+            line-height: 1.5 !important;
+            margin: 0 !important;
+        }
+        
+        .navbar .btn:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .navbar .btn-link {
+            border: none !important;
+            background: none !important;
+            text-decoration: none !important;
+        }
+        
+        .navbar-toggler {
+            padding: 0.25rem 0.5rem !important;
+            font-size: 1rem !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        }
+        
+        .navbar .container-fluid {
+            padding: 0 1rem !important;
+        }
+        
+                 .sidebar {
+             min-height: 100vh;
+             background: linear-gradient(135deg, var(--admin-secondary) 0%, #1a252f 100%);
+             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+         }
+         
+         .main-content {
+             background-color: var(--admin-light);
+             min-height: calc(100vh - 56px);
+             padding-top: 1rem;
+         }
+         
+         .container-fluid {
+             height: calc(100vh - 56px);
+             padding: 0 !important;
+         }
+         
+         .navbar .container-fluid {
+             padding: 0 1rem !important;
+         }
+         
+         html, body {
+             height: 100%;
+         }
+        
         .sidebar .nav-link {
-            color: #333;
-        }
-        .sidebar .nav-link.active {
-            color: #0d6efd;
-            background-color: rgba(13, 110, 253, .1);
-        }
-        .sidebar .nav-link:hover {
-            color: #0d6efd;
-        }
-        .drag-drop-area {
-            border: 2px dashed #dee2e6;
+            color: #a8a9b4;
+            padding: 12px 20px;
+            margin: 4px 8px;
             border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .sidebar .nav-link.active {
+            color: #ffffff;
+            background: linear-gradient(45deg, var(--admin-primary), var(--admin-accent));
+            box-shadow: 0 2px 8px rgba(20, 157, 221, 0.3);
+        }
+        
+        .sidebar .nav-link:hover {
+            color: #ffffff;
+            background-color: rgba(20, 157, 221, 0.1);
+            transform: translateX(4px);
+        }
+        
+        .sidebar .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--admin-primary), var(--admin-accent));
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, var(--admin-primary), var(--admin-accent));
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(45deg, var(--admin-accent), var(--admin-primary));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(20, 157, 221, 0.4);
+        }
+        
+        .drag-drop-area {
+            border: 2px dashed var(--admin-primary);
+            border-radius: 12px;
             padding: 2rem;
             text-align: center;
             transition: all 0.3s ease;
             cursor: pointer;
+            background: linear-gradient(45deg, rgba(20, 157, 221, 0.05), rgba(13, 122, 167, 0.05));
         }
+        
         .drag-drop-area.dragover {
-            border-color: #0d6efd;
-            background-color: rgba(13, 110, 253, .05);
+            border-color: var(--admin-accent);
+            background: linear-gradient(45deg, rgba(20, 157, 221, 0.1), rgba(13, 122, 167, 0.1));
+            transform: scale(1.02);
         }
         .image-preview {
             max-width: 150px;
@@ -45,11 +201,115 @@
             object-fit: cover;
             border-radius: 8px;
         }
+        
+        /* Dropdown Checkbox Styling */
+        .dropdown {
+            position: relative;
+        }
+        
+        .dropdown-menu {
+            position: absolute !important;
+            top: 100% !important;
+            left: 0 !important;
+            right: 0 !important;
+            z-index: 1050;
+            max-height: 200px;
+            overflow-y: auto;
+            width: 100% !important;
+            min-width: 100% !important;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+            background-color: #fff;
+            margin: 0 !important;
+        }
+        
+        .dropdown-menu.show {
+            position: absolute !important;
+            top: 100% !important;
+            left: 0 !important;
+            right: 0 !important;
+            transform: none !important;
+            inset: auto !important;
+        }
+        
+        .dropdown-menu .form-check {
+            padding: 8px 12px;
+            margin: 0;
+        }
+        
+        .dropdown-menu .form-check:hover {
+            background-color: rgba(20, 157, 221, 0.1);
+        }
+        
+        .dropdown-menu .form-check-input:checked + .form-check-label {
+            color: var(--admin-primary);
+            font-weight: 500;
+        }
+        
+        .dropdown-toggle {
+            text-align: left;
+            border: 2px solid #dee2e6;
+            transition: all 0.3s ease;
+        }
+        
+        .dropdown-toggle:focus {
+            border-color: var(--admin-primary);
+            box-shadow: 0 0 0 0.2rem rgba(20, 157, 221, 0.25);
+        }
+        
+        /* Force dropdown positioning */
+        .technologies-row {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 8rem !important; /* Increase space for dropdowns */
+            padding-bottom: 2rem;
+        }
+        
+        .technologies-row .col-md-4 {
+            position: relative;
+            overflow: visible;
+            z-index: 100;
+        }
+        
+        /* Specific dropdown positioning for frameworks and languages */
+        .dropdown {
+            position: relative;
+            z-index: 200;
+        }
+        
+        .dropdown-menu {
+            position: absolute !important;
+            top: 100% !important;
+            left: 0 !important;
+            right: 0 !important;
+            transform: none !important;
+            margin: 2px 0 0 0 !important;
+            z-index: 9999 !important;
+            background: white !important;
+            border: 1px solid #ccc !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+        }
+        
+        .dropdown-menu.show {
+            display: block !important;
+            position: absolute !important;
+            top: 100% !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100% !important;
+            z-index: 9999 !important;
+        }
+        
+        /* Push Project Links section down */
+        .technologies-row + .card {
+            margin-top: 2rem !important;
+        }
     </style>
 </head>
 <body>
     <!-- Top Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="/admin">
                 <i class="bi bi-speedometer2"></i> Portfolio Admin
@@ -70,8 +330,8 @@
 
     <div class="container-fluid">
         <div class="row">
-            <!-- Sidebar -->
-            <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                         <!-- Sidebar -->
+             <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
                 <div class="position-sticky pt-3">
                     <ul class="nav flex-column">
                         <li class="nav-item">
@@ -89,8 +349,7 @@
                                 <i class="bi bi-envelope"></i> Contacts
                             </a>
                         </li>
-                        <hr>
-                        <li class="nav-item">
+                        <li class="nav-item mt-2">
                             <a class="nav-link" href="/admin/projects/add">
                                 <i class="bi bi-plus-circle"></i> Add Project
                             </a>
@@ -99,8 +358,8 @@
                 </div>
             </nav>
 
-            <!-- Main content -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                         <!-- Main content -->
+             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
                 <!-- Header -->
                 <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <div>
@@ -138,7 +397,7 @@
                                     </div>
 
                                     <!-- Technologies -->
-                                    <div class="row">
+                                    <div class="row technologies-row">
                                         <div class="col-md-4">
                                             <label for="projectType" class="form-label">Project Type *</label>
                                             <select class="form-select" id="projectType" name="technologies[projectType]" required>
@@ -150,17 +409,80 @@
                                         </div>
                                         <div class="col-md-4">
                                             <label for="frameworks" class="form-label">Frameworks</label>
-                                            <input type="text" class="form-control" id="frameworks" name="frameworks" 
-                                                   placeholder="react, nextjs, django" 
-                                                   value="<%= project && project.technologies && project.technologies.frameworks ? project.technologies.frameworks.join(', ') : '' %>">
-                                            <small class="form-text text-muted">Separate with commas</small>
+                                            <div class="dropdown">
+                                                <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" 
+                                                        id="frameworkDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+                                                        data-bs-boundary="clippingParents" data-bs-reference="parent">
+                                                    <span id="frameworkSelected">Select Frameworks</span>
+                                                </button>
+                                                <ul class="dropdown-menu w-100" aria-labelledby="frameworkDropdown">
+                                                    <% if (typeof techOptions !== 'undefined' && techOptions.frameworks) { %>
+                                                        <% 
+                                                        const frameworkNames = {
+                                                            'react': 'React',
+                                                            'nextjs': 'Next.js',
+                                                            'aspnet': 'ASP.NET',
+                                                            'reactnative': 'React Native',
+                                                            'django': 'Django',
+                                                            'ejs': 'EJS/Express'
+                                                        };
+                                                        %>
+                                                        <% techOptions.frameworks.forEach(function(framework) { %>
+                                                            <li>
+                                                                <div class="form-check ms-3">
+                                                                    <input class="form-check-input framework-checkbox" type="checkbox" 
+                                                                           value="<%= framework %>" id="framework_<%= framework %>"
+                                                                           name="technologies[frameworks]"
+                                                                           <%= project && project.technologies && project.technologies.frameworks && project.technologies.frameworks.includes(framework) ? 'checked' : '' %>>
+                                                                    <label class="form-check-label" for="framework_<%= framework %>">
+                                                                        <%= frameworkNames[framework] || framework.charAt(0).toUpperCase() + framework.slice(1) %>
+                                                                    </label>
+                                                                </div>
+                                                            </li>
+                                                        <% }); %>
+                                                    <% } %>
+                                                </ul>
+                                            </div>
+                                            <small class="form-text text-muted">Select multiple frameworks</small>
                                         </div>
                                         <div class="col-md-4">
                                             <label for="languages" class="form-label">Languages</label>
-                                            <input type="text" class="form-control" id="languages" name="languages" 
-                                                   placeholder="javascript, python, typescript" 
-                                                   value="<%= project && project.technologies && project.technologies.languages ? project.technologies.languages.join(', ') : '' %>">
-                                            <small class="form-text text-muted">Separate with commas</small>
+                                            <div class="dropdown">
+                                                <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" 
+                                                        id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+                                                        data-bs-boundary="clippingParents" data-bs-reference="parent">
+                                                    <span id="languageSelected">Select Languages</span>
+                                                </button>
+                                                <ul class="dropdown-menu w-100" aria-labelledby="languageDropdown">
+                                                    <% if (typeof techOptions !== 'undefined' && techOptions.languages) { %>
+                                                        <% 
+                                                        const languageNames = {
+                                                            'javascript': 'JavaScript',
+                                                            'typescript': 'TypeScript',
+                                                            'nodejs': 'Node.js',
+                                                            'csharp': 'C#',
+                                                            'python': 'Python',
+                                                            'go': 'Go',
+                                                            'bun': 'Bun'
+                                                        };
+                                                        %>
+                                                        <% techOptions.languages.forEach(function(language) { %>
+                                                            <li>
+                                                                <div class="form-check ms-3">
+                                                                    <input class="form-check-input language-checkbox" type="checkbox" 
+                                                                           value="<%= language %>" id="language_<%= language %>"
+                                                                           name="technologies[languages]"
+                                                                           <%= project && project.technologies && project.technologies.languages && project.technologies.languages.includes(language) ? 'checked' : '' %>>
+                                                                    <label class="form-check-label" for="language_<%= language %>">
+                                                                        <%= languageNames[language] || language.charAt(0).toUpperCase() + language.slice(1) %>
+                                                                    </label>
+                                                                </div>
+                                                            </li>
+                                                        <% }); %>
+                                                    <% } %>
+                                                </ul>
+                                            </div>
+                                            <small class="form-text text-muted">Select multiple languages</small>
                                         </div>
                                     </div>
                                 </div>
@@ -458,6 +780,59 @@
                 showConfirmButton: false
             });
         }
+
+        // Handle dropdown checkboxes
+        function updateDropdownText(checkboxClass, textElementId, defaultText) {
+            const checkboxes = document.querySelectorAll('.' + checkboxClass);
+            const textElement = document.getElementById(textElementId);
+            const checkedBoxes = Array.from(checkboxes).filter(cb => cb.checked);
+            
+            if (checkedBoxes.length === 0) {
+                textElement.textContent = defaultText;
+            } else if (checkedBoxes.length === 1) {
+                textElement.textContent = checkedBoxes[0].nextElementSibling.textContent.trim();
+            } else {
+                textElement.textContent = `${checkedBoxes.length} items selected`;
+            }
+        }
+
+        // Initialize dropdown text on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDropdownText('framework-checkbox', 'frameworkSelected', 'Select Frameworks');
+            updateDropdownText('language-checkbox', 'languageSelected', 'Select Languages');
+        });
+
+        // Handle framework checkbox changes
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('framework-checkbox')) {
+                updateDropdownText('framework-checkbox', 'frameworkSelected', 'Select Frameworks');
+            }
+            
+            if (e.target.classList.contains('language-checkbox')) {
+                updateDropdownText('language-checkbox', 'languageSelected', 'Select Languages');
+            }
+        });
+
+        // Prevent dropdown from closing when clicking on checkboxes
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.dropdown-menu .form-check')) {
+                e.stopPropagation();
+            }
+        });
+
+        // Force dropdown positioning
+        document.addEventListener('shown.bs.dropdown', function(e) {
+            const dropdown = e.target.nextElementSibling;
+            if (dropdown && dropdown.classList.contains('dropdown-menu')) {
+                dropdown.style.position = 'absolute';
+                dropdown.style.top = '100%';
+                dropdown.style.left = '0';
+                dropdown.style.right = '0';
+                dropdown.style.zIndex = '9999';
+                dropdown.style.transform = 'none';
+                dropdown.style.width = '100%';
+            }
+        });
     </script>
 </body>
 </html>
