@@ -158,6 +158,83 @@
       }, false);
     });
 
+    // Portfolio Dropdown Filters
+    const dropdownFilters = isotopeItem.querySelectorAll('.portfolio-filter-dropdown');
+    const resetButton = isotopeItem.querySelector('#resetFilters');
+    const showAllButton = isotopeItem.querySelector('#showAll');
+    
+    let currentFilters = {
+      type: '*',
+      framework: '*',
+      language: '*'
+    };
+
+    function combineFilters() {
+      let combinedFilter = '';
+      let hasActiveFilter = false;
+      
+      Object.values(currentFilters).forEach(filter => {
+        if (filter !== '*') {
+          combinedFilter += filter;
+          hasActiveFilter = true;
+        }
+      });
+      
+      return hasActiveFilter ? combinedFilter : '*';
+    }
+
+    function updateIsotopeFilter() {
+      const combinedFilter = combineFilters();
+      if (initIsotope) {
+        initIsotope.arrange({
+          filter: combinedFilter
+        });
+        if (typeof aosInit === 'function') {
+          aosInit();
+        }
+      }
+    }
+
+    // Handle dropdown changes
+    dropdownFilters.forEach(function(dropdown) {
+      dropdown.addEventListener('change', function() {
+        const filterGroup = this.getAttribute('data-filter-group');
+        const filterValue = this.value;
+        currentFilters[filterGroup] = filterValue;
+        updateIsotopeFilter();
+      });
+    });
+
+    // Reset all filters
+    if (resetButton) {
+      resetButton.addEventListener('click', function() {
+        currentFilters = {
+          type: '*',
+          framework: '*',
+          language: '*'
+        };
+        dropdownFilters.forEach(dropdown => {
+          dropdown.value = '*';
+        });
+        updateIsotopeFilter();
+      });
+    }
+
+    // Show all items
+    if (showAllButton) {
+      showAllButton.addEventListener('click', function() {
+        currentFilters = {
+          type: '*',
+          framework: '*',
+          language: '*'
+        };
+        dropdownFilters.forEach(dropdown => {
+          dropdown.value = '*';
+        });
+        updateIsotopeFilter();
+      });
+    }
+
   });
 
   /**

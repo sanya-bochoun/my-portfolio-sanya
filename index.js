@@ -24,8 +24,11 @@ if (!DATABASEURL) {
     process.exit(1);
 }
 
-// เชื่อมต่อฐานข้อมูล
-connectDB(DATABASEURL);
+// เชื่อมต่อฐานข้อมูล (ทำให้เป็น optional เพื่อไม่ให้ app crash)
+connectDB(DATABASEURL).catch(err => {
+    console.log("⚠️ MongoDB connection failed, but server will continue running");
+    console.log("Error:", err.message);
+});
 
 // กำหนดให้ Express ใช้งานไฟล์ในโฟลเดอร์ public
 const __filename = fileURLToPath(import.meta.url);

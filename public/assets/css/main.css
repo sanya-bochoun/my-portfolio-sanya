@@ -768,6 +768,77 @@ section,
 /*--------------------------------------------------------------
 # Portfolio Section
 --------------------------------------------------------------*/
+
+/* Portfolio Dropdown Filters */
+.portfolio .portfolio-dropdown-filters {
+  margin-bottom: 30px;
+}
+
+.portfolio .portfolio-filter-dropdown {
+  border: 2px solid #e1e5e9;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--heading-color);
+  background-color: var(--surface-color);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.portfolio .portfolio-filter-dropdown:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(20, 157, 221, 0.1);
+  outline: none;
+}
+
+.portfolio .portfolio-filter-dropdown:hover {
+  border-color: var(--accent-color);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.portfolio .portfolio-filter-dropdown option {
+  padding: 8px;
+  font-size: 14px;
+}
+
+/* Quick Action Buttons */
+.portfolio #resetFilters,
+.portfolio #showAll {
+  border-radius: 8px;
+  font-weight: 500;
+  padding: 12px 16px;
+  transition: all 0.3s ease;
+  border: 2px solid;
+}
+
+.portfolio #resetFilters {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+  background-color: transparent;
+}
+
+.portfolio #resetFilters:hover {
+  background-color: var(--accent-color);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(20, 157, 221, 0.3);
+}
+
+.portfolio #showAll {
+  border-color: var(--accent-color);
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.portfolio #showAll:hover {
+  background-color: color-mix(in srgb, var(--accent-color), black 10%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(20, 157, 221, 0.4);
+}
+
+/* Traditional Filters */
 .portfolio .portfolio-filters {
   padding: 0;
   margin: 0 auto 20px auto;

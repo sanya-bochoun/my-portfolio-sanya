@@ -13,20 +13,90 @@
 
         <div class="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
 
-            <ul class="portfolio-filters isotope-filters" data-aos="fade-up" data-aos-delay="100">
-                <li data-filter="*" class="filter-active">All</li>
-                <li data-filter=".filter-app">Application</li>
-                <li data-filter=".filter-website">Website</li><!-- <li data-filter=".filter-branding">Fixma</li>
-                <li data-filter=".filter-books">Drawing</li> -->
-            </ul><!-- End Portfolio Filters -->
+            <!-- Dropdown Filters -->
+            <div class="portfolio-dropdown-filters" data-aos="fade-up" data-aos-delay="100">
+                <div class="row g-3 mb-4">
+                    <!-- Project Type Dropdown -->
+                    <div class="col-md-3">
+                        <select class="form-select portfolio-filter-dropdown" data-filter-group="type">
+                            <option value="*">🗂️ All Project Types</option>
+                            <option value=".filter-mobileapp">📱 Mobile Application</option>
+                            <option value=".filter-app">💻 Web Application</option>
+                            <option value=".filter-website">🌐 Website</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Framework Dropdown -->
+                    <div class="col-md-3">
+                        <select class="form-select portfolio-filter-dropdown" data-filter-group="framework">
+                            <option value="*">🔧 All Frameworks</option>
+                            <option value=".filter-react">⚛️ React</option>
+                            <option value=".filter-nextjs">▲ Next.js</option>
+                            <option value=".filter-aspnet">🔷 ASP.NET</option>
+                            <option value=".filter-reactnative">📱 React Native</option>
+                            <option value=".filter-django">🎯 Django</option>
+                            <option value=".filter-ejs">📄 EJS/Express</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Programming Language Dropdown -->
+                    <div class="col-md-3">
+                        <select class="form-select portfolio-filter-dropdown" data-filter-group="language">
+                            <option value="*">💻 All Languages</option>
+                            <option value=".filter-javascript">🟨 JavaScript</option>
+                            <option value=".filter-typescript">🔷 TypeScript</option>
+                            <option value=".filter-nodejs">🟢 Node.js</option>
+                            <option value=".filter-csharp">🔵 C#</option>
+                            <option value=".filter-python">🐍 Python</option>
+                            <option value=".filter-go">🐹 Go</option>
+                            <option value=".filter-bun">🍞 Bun</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="col-md-3">
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-primary btn-sm flex-fill" id="resetFilters">
+                                🔄 Reset All
+                            </button>
+                            <button class="btn btn-primary btn-sm flex-fill" data-filter="*" id="showAll">
+                                👁️ Show All
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Traditional Filter Buttons (Hidden by default, can be toggled) -->
+            <div class="traditional-filters" style="display: none;">
+                <ul class="portfolio-filters isotope-filters" data-aos="fade-up" data-aos-delay="100">
+                    <li data-filter="*" class="filter-active">All</li>
+                    <li data-filter=".filter-mobileapp">Mobile App</li>
+                    <li data-filter=".filter-app">Application</li>
+                    <li data-filter=".filter-website">Website</li>
+                    <li data-filter=".filter-aspnet">ASP.NET</li>
+                    <li data-filter=".filter-react">React</li>
+                    <li data-filter=".filter-nextjs">Next.JS</li>
+                    <li data-filter=".filter-ejs">EJS</li>
+                    <li data-filter=".filter-javascript">JavaScript</li>
+                    <li data-filter=".filter-typescript">TypeScript</li>
+                    <li data-filter=".filter-csharp">C#</li>
+                    <li data-filter=".filter-python">Python</li>
+                    <li data-filter=".filter-django">Django</li>
+                    <li data-filter=".filter-nodejs">Node.JS</li>               
+                    <li data-filter=".filter-go">GO</li>
+                    <li data-filter=".filter-bun">Bun</li>
+                    <li data-filter=".filter-reactnative">React Native</li>
+                </ul>
+            </div><!-- End Portfolio Filters -->
 
             <div class="row gy-4 isotope-container" data-aos="fade-up" data-aos-delay="200">
 
-                <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
+                <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app filter-react filter-nodejs filter-javascript">
                     <div class="portfolio-content h-100">
                         <img src="assets/img/portfolio/app-1-1.png" class="img-fluid" alt="">
                         <div class="portfolio-info">
-                            <h4>Minor-Cineplex</h4>
+                            <h4>Minor-Cineplex/React,Node.js,Express/vercel</h4>
                             <p>An intuitive movie ticket booking platform where users can quickly find films, discover
                                 nearby cinemas, choose their seats in real-time, and enjoy a seamless checkout
                                 experience.</p>
@@ -45,11 +115,11 @@
                     </div>
                 </div><!-- End Portfolio Item -->
 
-                <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-website">
+                <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-website filter-react filter-nodejs filter-javascript filter-typescript">
                     <div class="portfolio-content h-100">
                         <img src="assets/img/portfolio/app-2-1.png" class="img-fluid" alt="">
                         <div class="portfolio-info">
-                            <h4>Thaitra Travel Platform</h4>
+                            <h4>Thaitra Travel Platform/React Vite,Typescript,Node.js,Express/vercel&Render</h4>
                             <p>A modern travel booking platform for Thailand, featuring destination search, responsive
                                 design, and seamless enquiry for popular places. Built for an engaging and intuitive
                                 user experience.</p>
@@ -68,21 +138,21 @@
                     </div>
                 </div>
 
-                <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
+                <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app filter-nodejs filter-nextjs filter-javascript filter-typescript">
                     <div class="portfolio-content h-100">
                         <img src="assets/img/portfolio/app-3-1.png" class="img-fluid" alt="">
                         <div class="portfolio-info">
-                            <h4>SoundWave Music App</h4>
+                            <h4>SoundWave Music App/Next.js, Node.js, Express/vercel</h4>
                             <p>The Sound Wave Music App is a modern music web application, designed for a seamless,
                                 engaging, and intuitive listening experience.</p>
                             <a href="assets/img/portfolio/app-3-1.png" title="See Details"
-                                data-gallery="portfolio-gallery-app2" class="glightbox preview-link"><i
+                                data-gallery="portfolio-gallery-app3" class="glightbox preview-link"><i
                                     class="bi bi-zoom-in"></i></a>
-                            <a href="assets/img/portfolio/app-3-2.png" data-gallery="portfolio-gallery-app2"
+                            <a href="assets/img/portfolio/app-3-2.png" data-gallery="portfolio-gallery-app3"
                                 class="glightbox d-none"></a>
-                            <a href="assets/img/portfolio/app-3-3.png" data-gallery="portfolio-gallery-app2"
+                            <a href="assets/img/portfolio/app-3-3.png" data-gallery="portfolio-gallery-app3"
                                 class="glightbox d-none"></a>
-                            <a href="assets/img/portfolio/app-3-4.png" data-gallery="portfolio-gallery-app2"
+                            <a href="assets/img/portfolio/app-3-4.png" data-gallery="portfolio-gallery-app3"
                                 class="glightbox d-none"></a>
                             <a href="https://github.com/sanya-bochoun/SoundWave-music-app" target="_blank"
                                 title="Github Link" class="details-link"><i class="bi bi-link-45deg"></i></a>
@@ -92,22 +162,22 @@
                     </div>
                 </div>
 
-                <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-website">
+                <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-website filter-ejs filter-nodejs filter-javascript">
                     <div class="portfolio-content h-100">
                         <img src="assets/img/portfolio/app-4-1.png" class="img-fluid" alt="">
                         <div class="portfolio-info">
-                            <h4>Portfolio Website</h4>
+                            <h4>Portfolio Website/EJS,Node.js,Express/Heroku</h4>
                             <p>A modern, responsive portfolio website built with Node.js, Express.js, and MongoDB.
                                 Features smooth animations, contact form functionality, and a clean, professional
                                 design.</p>
                             <a href="assets/img/portfolio/app-4-1.png" title="See Details"
-                                data-gallery="portfolio-gallery-app2" class="glightbox preview-link"><i
+                                data-gallery="portfolio-gallery-app4" class="glightbox preview-link"><i
                                     class="bi bi-zoom-in"></i></a>
-                            <a href="assets/img/portfolio/app-4-2.png" data-gallery="portfolio-gallery-app2"
+                            <a href="assets/img/portfolio/app-4-2.png" data-gallery="portfolio-gallery-app4"
                                 class="glightbox d-none"></a>
-                            <a href="assets/img/portfolio/app-4-3.png" data-gallery="portfolio-gallery-app2"
+                            <a href="assets/img/portfolio/app-4-3.png" data-gallery="portfolio-gallery-app4"
                                 class="glightbox d-none"></a>
-                            <a href="assets/img/portfolio/app-4-4.png" data-gallery="portfolio-gallery-app2"
+                            <a href="assets/img/portfolio/app-4-4.png" data-gallery="portfolio-gallery-app4"
                                 class="glightbox d-none"></a>
                             <a href="https://github.com/sanya-bochoun/my-portfolio-sanya" target="_blank"
                                 title="Github Link" class="details-link"><i class="bi bi-link-45deg"></i></a>
@@ -117,8 +187,63 @@
                     </div>
                 </div>
 
+                <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-aspnet filter-csharp filter-app">
+                    <div class="portfolio-content h-100">
+                        <img src="assets/img/portfolio/app-5-1.png" class="img-fluid" alt="">
+                        <div class="portfolio-info">
+                            <h4>Book Management System/C#,ASP.NET CORE/Render</h4>
+                            <p>Manage books, categories, customers, and orders with full create, read, update, and delete functionality.</p>
+                            <a href="assets/img/portfolio/app-5-1.png" title="See Details"
+                                data-gallery="portfolio-gallery-app5" class="glightbox preview-link"><i
+                                    class="bi bi-zoom-in"></i></a>
+                            <a href="assets/img/portfolio/app-5-2.png" data-gallery="portfolio-gallery-app5"
+                                class="glightbox d-none"></a>
+                            <a href="assets/img/portfolio/app-5-3.png" data-gallery="portfolio-gallery-app5"
+                                class="glightbox d-none"></a>
+                            <a href="assets/img/portfolio/app-5-4.png" data-gallery="portfolio-gallery-app5"
+                                class="glightbox d-none"></a>
+                            <a href="assets/img/portfolio/app-5-5.png" data-gallery="portfolio-gallery-app5"
+                                class="glightbox d-none"></a>
+                            <a href="assets/img/portfolio/app-5-6.png" data-gallery="portfolio-gallery-app5"
+                                class="glightbox d-none"></a>
+                            <a href="assets/img/portfolio/app-5-7.png" data-gallery="portfolio-gallery-app5"
+                                class="glightbox d-none"></a>
+                            <a href="assets/img/portfolio/app-5-8.png" data-gallery="portfolio-gallery-app5"
+                                class="glightbox d-none"></a>
+                            <a href="https://github.com/sanya-bochoun/BookManagementSystem" target="_blank"
+                                title="Github Link" class="details-link"><i class="bi bi-link-45deg"></i></a>
+                            <a href="https://bookmanagementsystem-z95q.onrender.com/Home" target="_blank"
+                                title="Live Demo" class="live-demo-link"><i class="bi bi-play-circle"></i></a>
+                        </div>
+                    </div>
+                </div>
 
-
+                <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-reactnative filter-app filter-mobileapp filter-javascript filter-typescript">
+                    <div class="portfolio-content h-100">
+                        <img src="assets/img/portfolio/app-6-2.png" class="img-fluid" alt="">
+                        <div class="portfolio-info">
+                            <h4>Tracking-Driver-App/React Native,Typescript,Expo Built Android & iOS</h4>
+                            <p>Application for recording driving data through Delivery Platform.</p>
+                            <a href="assets/img/portfolio/app-6-1.png" title="See Details"
+                                data-gallery="portfolio-gallery-app6" class="glightbox preview-link"><i
+                                    class="bi bi-zoom-in"></i></a>
+                            <a href="assets/img/portfolio/app-6-2.png" data-gallery="portfolio-gallery-app6"
+                                class="glightbox d-none"></a>
+                            <a href="assets/img/portfolio/app-6-3.png" data-gallery="portfolio-gallery-app6"
+                                class="glightbox d-none"></a>
+                            <a href="assets/img/portfolio/app-6-4.png" data-gallery="portfolio-gallery-app6"
+                                class="glightbox d-none"></a>
+                            <a href="assets/img/portfolio/app-6-5.png" data-gallery="portfolio-gallery-app6"
+                                class="glightbox d-none"></a>
+                            <a href="assets/img/portfolio/app-6-6.png" data-gallery="portfolio-gallery-app6"
+                                class="glightbox d-none"></a>
+                            <a href="https://github.com/sanya-bochoun/tracking-driver-app" target="_blank"
+                                title="Github Link" class="details-link"><i class="bi bi-link-45deg"></i></a>
+                            <a href="https://expo.dev/accounts/tazzyodev/projects/bolt-driver-tracker/builds/57b59987-cd2e-4bc2-84f5-237a39f09ea7" target="_blank"
+                                title="Live Demo" class="live-demo-link"><i class="bi bi-play-circle"></i></a>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- End Portfolio Item -->
 
