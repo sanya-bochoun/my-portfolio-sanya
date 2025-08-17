@@ -1,0 +1,25 @@
+🔧 การตั้งค่าส่งเมลจริง
+
+1. สร้างไฟล์ .env ในโฟลเดอร์หลัก:
+
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-16-character-app-password
+EMAIL_FROM="Portfolio Admin" <noreply@portfolio.com>
+
+2. ตั้งค่า Gmail App Password:
+   - เปิด 2-Factor Authentication ในบัญชี Google
+   - ไปที่: https://myaccount.google.com/apppasswords
+   - สร้าง App Password สำหรับ "Portfolio App"
+   - คัดลอก password 16 ตัวอักษร
+   - ใส่ใน EMAIL_PASS
+
+3. รีสตาร์ทเซิร์ฟเวอร์:
+   nodemon index.js
+
+4. ทดสอบส่ง Reply:
+   - เมลจะส่งไปที่อีเมลจริงๆ
+   - ดู terminal จะแสดง "Email sent successfully!"
+
+หากไม่ตั้งค่า .env:
+- ระบบจะใช้ Ethereal Email (test mode)
+- เมลไม่ส่งจริง แต่มี Preview URL ใน terminal

@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= action === 'add' ? 'Add New Project' : 'Edit Project' %> - Portfolio Admin</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Quill Editor -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+        }
+        .sidebar .nav-link {
+            color: #333;
+        }
+        .sidebar .nav-link.active {
+            color: #0d6efd;
+            background-color: rgba(13, 110, 253, .1);
+        }
+        .sidebar .nav-link:hover {
+            color: #0d6efd;
+        }
+        .drag-drop-area {
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .drag-drop-area.dragover {
+            border-color: #0d6efd;
+            background-color: rgba(13, 110, 253, .05);
+        }
+        .image-preview {
+            max-width: 150px;
+            max-height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/admin">
+                <i class="bi bi-speedometer2"></i> Portfolio Admin
+            </a>
+            
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/" target="_blank">
+                    <i class="bi bi-eye"></i> View Site
+                </a>
+                <form action="/admin/logout" method="POST" class="d-inline">
+                    <button class="nav-link btn btn-link text-light" type="submit">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin">
+                                <i class="bi bi-house"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/admin/projects">
+                                <i class="bi bi-folder"></i> Projects
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/contacts">
+                                <i class="bi bi-envelope"></i> Contacts
+                            </a>
+                        </li>
+                        <hr>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/projects/add">
+                                <i class="bi bi-plus-circle"></i> Add Project
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <!-- Header -->
+                <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <div>
+                        <h1 class="h2"><%= action === 'add' ? 'Add New Project' : 'Edit Project' %></h1>
+                        <p class="text-muted"><%= action === 'add' ? 'Create a new portfolio project' : 'Update project information' %></p>
+                    </div>
+                    <a href="/admin/projects" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to Projects
+                    </a>
+                </div>
+
+                <!-- Project Form -->
+                <form id="projectForm" action="/admin/projects/save/<%= project ? project._id : 'new' %>" method="POST">
+                    <div class="row">
+                        <!-- Main Information -->
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Project Information</h5>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Title -->
+                                    <div class="mb-3">
+                                        <label for="title" class="form-label">Project Title *</label>
+                                        <input type="text" class="form-control" id="title" name="title" 
+                                               value="<%= project ? project.title : '' %>" required>
+                                    </div>
+
+                                    <!-- Description -->
+                                    <div class="mb-3">
+                                        <label for="description" class="form-label">Description *</label>
+                                        <div id="editor" style="height: 200px;"><%= project ? project.description : '' %></div>
+                                        <input type="hidden" id="description" name="description" 
+                                               value="<%= project ? project.description : '' %>">
+                                    </div>
+
+                                    <!-- Technologies -->
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label for="projectType" class="form-label">Project Type *</label>
+                                            <select class="form-select" id="projectType" name="technologies[projectType]" required>
+                                                <option value="">Select Type</option>
+                                                <option value="app" <%= project && project.technologies && project.technologies.projectType === 'app' ? 'selected' : '' %>>Web Application</option>
+                                                <option value="website" <%= project && project.technologies && project.technologies.projectType === 'website' ? 'selected' : '' %>>Website</option>
+                                                <option value="mobileapp" <%= project && project.technologies && project.technologies.projectType === 'mobileapp' ? 'selected' : '' %>>Mobile Application</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="frameworks" class="form-label">Frameworks</label>
+                                            <input type="text" class="form-control" id="frameworks" name="frameworks" 
+                                                   placeholder="react, nextjs, django" 
+                                                   value="<%= project && project.technologies && project.technologies.frameworks ? project.technologies.frameworks.join(', ') : '' %>">
+                                            <small class="form-text text-muted">Separate with commas</small>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="languages" class="form-label">Languages</label>
+                                            <input type="text" class="form-control" id="languages" name="languages" 
+                                                   placeholder="javascript, python, typescript" 
+                                                   value="<%= project && project.technologies && project.technologies.languages ? project.technologies.languages.join(', ') : '' %>">
+                                            <small class="form-text text-muted">Separate with commas</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Links -->
+                            <div class="card mt-4">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Project Links</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="github" class="form-label">GitHub Repository *</label>
+                                            <input type="url" class="form-control" id="github" name="links[github]" 
+                                                   value="<%= project && project.links ? project.links.github : '' %>" required
+                                                   placeholder="https://github.com/username/repo">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="liveDemo" class="form-label">Live Demo URL *</label>
+                                            <input type="url" class="form-control" id="liveDemo" name="links[liveDemo]" 
+                                                   value="<%= project && project.links ? project.links.liveDemo : '' %>" required
+                                                   placeholder="https://your-project.com">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar -->
+                        <div class="col-lg-4">
+                            <!-- Status & Actions -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Publish</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label for="status" class="form-label">Status</label>
+                                        <select class="form-select" id="status" name="status">
+                                            <option value="draft" <%= project && project.status === 'draft' ? 'selected' : '' %>>Draft</option>
+                                            <option value="published" <%= project && project.status === 'published' ? 'selected' : '' %>>Published</option>
+                                            <option value="hidden" <%= project && project.status === 'hidden' ? 'selected' : '' %>>Hidden</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="order" class="form-label">Display Order</label>
+                                        <input type="number" class="form-control" id="order" name="order" 
+                                               value="<%= project ? project.order : 0 %>" min="0">
+                                        <small class="form-text text-muted">Lower numbers appear first</small>
+                                    </div>
+
+                                    <hr>
+
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="bi bi-check-circle"></i> <%= action === 'add' ? 'Create Project' : 'Update Project' %>
+                                        </button>
+                                        <% if (project) { %>
+                                            <button type="button" class="btn btn-outline-info" id="previewBtn">
+                                                <i class="bi bi-eye"></i> Preview
+                                            </button>
+                                        <% } %>
+                                        <a href="/admin/projects" class="btn btn-outline-secondary">
+                                            <i class="bi bi-x-circle"></i> Cancel
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Main Image Upload -->
+                            <div class="card mt-4">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Main Image *</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="drag-drop-area" id="mainImageDrop">
+                                        <i class="bi bi-cloud-upload display-6 text-muted"></i>
+                                        <p class="mt-2 mb-2">Drag & drop image here or click to browse</p>
+                                        <small class="text-muted">Max size: 5MB | Formats: JPG, PNG, GIF, WebP</small>
+                                        <input type="file" id="mainImageInput" name="mainImage" accept="image/*" style="display: none;">
+                                        <input type="hidden" id="mainImagePath" name="mainImage" value="<%= project ? project.mainImage : '' %>">
+                                    </div>
+                                    
+                                    <!-- Preview -->
+                                    <div id="mainImagePreview" <%= project ? '' : 'style="display: none;"' %>>
+                                        <% if (project) { %>
+                                            <img src="/<%= project.mainImage %>" class="img-fluid rounded mt-3" alt="Main image">
+                                        <% } %>
+                                        <button type="button" class="btn btn-sm btn-outline-danger mt-2" id="removeMainImage">
+                                            <i class="bi bi-trash"></i> Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Gallery Images -->
+                            <div class="card mt-4">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Gallery Images</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="drag-drop-area" id="galleryDrop">
+                                        <i class="bi bi-images display-6 text-muted"></i>
+                                        <p class="mt-2 mb-2">Drag & drop multiple images here</p>
+                                        <small class="text-muted">Max 10 images | Max size: 5MB each</small>
+                                        <input type="file" id="galleryInput" name="galleryImages" accept="image/*" multiple style="display: none;">
+                                    </div>
+                                    
+                                    <!-- Gallery Preview -->
+                                    <div id="galleryPreview" class="row g-2 mt-3">
+                                        <% if (project && project.galleryImages && project.galleryImages.length > 0) { %>
+                                            <% project.galleryImages.forEach(function(img, index) { %>
+                                                <div class="col-6">
+                                                    <div class="position-relative">
+                                                        <img src="/<%= img %>" class="img-fluid rounded" alt="Gallery image">
+                                                        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-gallery-image" 
+                                                                data-index="<%= index %>">
+                                                            <i class="bi bi-x"></i>
+                                                        </button>
+                                                        <input type="hidden" name="galleryImages[]" value="<%= img %>">
+                                                    </div>
+                                                </div>
+                                            <% }); %>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Quill Editor -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script>
+        // Initialize Quill Editor
+        var quill = new Quill('#editor', {
+            theme: 'snow',
+            placeholder: 'Write a detailed description of your project...',
+            modules: {
+                toolbar: [
+                    ['bold', 'italic', 'underline'],
+                    ['link'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['clean']
+                ]
+            }
+        });
+
+        // Sync Quill content with hidden input
+        quill.on('text-change', function() {
+            document.getElementById('description').value = quill.root.innerHTML;
+        });
+
+        // Drag & Drop for Main Image
+        setupDragDrop('mainImageDrop', 'mainImageInput', false);
+        
+        // Drag & Drop for Gallery
+        setupDragDrop('galleryDrop', 'galleryInput', true);
+
+        function setupDragDrop(dropId, inputId, multiple) {
+            const dropArea = document.getElementById(dropId);
+            const fileInput = document.getElementById(inputId);
+
+            dropArea.addEventListener('click', () => fileInput.click());
+            
+            dropArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropArea.classList.add('dragover');
+            });
+
+            dropArea.addEventListener('dragleave', () => {
+                dropArea.classList.remove('dragover');
+            });
+
+            dropArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropArea.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files, multiple, dropId);
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                handleFiles(e.target.files, multiple, dropId);
+            });
+        }
+
+        function handleFiles(files, multiple, dropId) {
+            const formData = new FormData();
+            
+            if (multiple) {
+                for (let file of files) {
+                    formData.append('images', file);
+                }
+                uploadFiles('/admin/upload/multiple', formData, dropId);
+            } else {
+                if (files.length > 0) {
+                    formData.append('image', files[0]);
+                    uploadFiles('/admin/upload/single', formData, dropId);
+                }
+            }
+        }
+
+        function uploadFiles(url, formData, dropId) {
+            fetch(url, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (dropId === 'mainImageDrop') {
+                        updateMainImagePreview(data.file);
+                    } else {
+                        updateGalleryPreview(data.files || [data.file]);
+                    }
+                } else {
+                    Swal.fire('Error!', data.error, 'error');
+                }
+            })
+            .catch(error => {
+                Swal.fire('Error!', 'Upload failed', 'error');
+            });
+        }
+
+        function updateMainImagePreview(file) {
+            document.getElementById('mainImagePath').value = file.path;
+            document.getElementById('mainImagePreview').innerHTML = `
+                <img src="${file.url}" class="img-fluid rounded mt-3" alt="Main image">
+                <button type="button" class="btn btn-sm btn-outline-danger mt-2" id="removeMainImage">
+                    <i class="bi bi-trash"></i> Remove
+                </button>
+            `;
+            document.getElementById('mainImagePreview').style.display = 'block';
+        }
+
+        function updateGalleryPreview(files) {
+            const gallery = document.getElementById('galleryPreview');
+            
+            files.forEach(file => {
+                const col = document.createElement('div');
+                col.className = 'col-6';
+                col.innerHTML = `
+                    <div class="position-relative">
+                        <img src="${file.url}" class="img-fluid rounded" alt="Gallery image">
+                        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-gallery-image">
+                            <i class="bi bi-x"></i>
+                        </button>
+                        <input type="hidden" name="galleryImages[]" value="${file.path}">
+                    </div>
+                `;
+                gallery.appendChild(col);
+            });
+        }
+
+        // Remove images
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('#removeMainImage')) {
+                document.getElementById('mainImagePath').value = '';
+                document.getElementById('mainImagePreview').style.display = 'none';
+            }
+            
+            if (e.target.closest('.remove-gallery-image')) {
+                e.target.closest('.col-6').remove();
+            }
+        });
+
+        // Form submission
+        document.getElementById('projectForm').addEventListener('submit', function(e) {
+            // Update description from Quill
+            document.getElementById('description').value = quill.root.innerHTML;
+            
+            // Validate required fields
+            if (!document.getElementById('mainImagePath').value) {
+                e.preventDefault();
+                Swal.fire('Error!', 'Please upload a main image', 'error');
+                return;
+            }
+        });
+
+        function showAlert(type, message) {
+            Swal.fire({
+                icon: type,
+                title: type === 'success' ? 'Success!' : 'Error!',
+                text: message,
+                timer: 3000,
+                showConfirmButton: false
+            });
+        }
+    </script>
+</body>
+</html>

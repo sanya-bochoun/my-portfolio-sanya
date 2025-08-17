@@ -195,12 +195,34 @@
       }
     }
 
-    // Handle dropdown changes
+    // Handle dropdown changes (traditional selects)
     dropdownFilters.forEach(function(dropdown) {
       dropdown.addEventListener('change', function() {
         const filterGroup = this.getAttribute('data-filter-group');
         const filterValue = this.value;
         currentFilters[filterGroup] = filterValue;
+        updateIsotopeFilter();
+      });
+    });
+
+    // Handle custom dropdown clicks
+    const customDropdowns = isotopeItem.querySelectorAll('.custom-dropdown .dropdown-item');
+    customDropdowns.forEach(function(item) {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const filterValue = this.getAttribute('data-filter');
+        const dropdownMenu = this.closest('.dropdown-menu');
+        const filterGroup = dropdownMenu.getAttribute('data-filter-group');
+        const button = dropdownMenu.previousElementSibling;
+        
+        // Update current filters
+        currentFilters[filterGroup] = filterValue;
+        
+        // Update button text and icon
+        button.innerHTML = this.innerHTML;
+        
+        // Update isotope
         updateIsotopeFilter();
       });
     });
@@ -213,9 +235,22 @@
           framework: '*',
           language: '*'
         };
+        
+        // Reset traditional dropdowns
         dropdownFilters.forEach(dropdown => {
           dropdown.value = '*';
         });
+        
+        // Reset custom dropdowns
+        const customDropdownButtons = isotopeItem.querySelectorAll('.custom-dropdown button');
+        customDropdownButtons.forEach(button => {
+          const filterGroup = button.nextElementSibling.getAttribute('data-filter-group');
+          const allOption = button.nextElementSibling.querySelector('[data-filter="*"]');
+          if (allOption) {
+            button.innerHTML = allOption.innerHTML;
+          }
+        });
+        
         updateIsotopeFilter();
       });
     }
@@ -228,9 +263,22 @@
           framework: '*',
           language: '*'
         };
+        
+        // Reset traditional dropdowns
         dropdownFilters.forEach(dropdown => {
           dropdown.value = '*';
         });
+        
+        // Reset custom dropdowns
+        const customDropdownButtons = isotopeItem.querySelectorAll('.custom-dropdown button');
+        customDropdownButtons.forEach(button => {
+          const filterGroup = button.nextElementSibling.getAttribute('data-filter-group');
+          const allOption = button.nextElementSibling.querySelector('[data-filter="*"]');
+          if (allOption) {
+            button.innerHTML = allOption.innerHTML;
+          }
+        });
+        
         updateIsotopeFilter();
       });
     }
@@ -316,10 +364,19 @@
       sentDiv.style.display = 'none';
       submitBtn.disabled = true;
       
+      // แปลง FormData เป็น URLSearchParams สำหรับ urlencoded
+      const urlEncodedData = new URLSearchParams();
+      for (const [key, value] of formData.entries()) {
+        urlEncodedData.append(key, value);
+      }
+      
       // ส่งข้อมูลด้วย fetch
       fetch('/contact', {
         method: 'POST',
-        body: formData
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: urlEncodedData
       })
       .then(response => {
         if (response.ok) {

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects Management - Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .nav-link {
+            color: rgba(255,255,255,0.8);
+            transition: all 0.3s;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: white;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+        .main-content {
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+        .card {
+            border: none;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar p-0">
+                <div class="p-4">
+                    <h5 class="text-white mb-4">Admin Panel</h5>
+                    <ul class="nav flex-column">
+                        <li class="nav-item mb-2">
+                            <a href="/admin/dashboard" class="nav-link">
+                                <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="/admin/projects" class="nav-link active">
+                                <i class="bi bi-folder me-2"></i> Projects
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="/admin/contacts" class="nav-link">
+                                <i class="bi bi-envelope me-2"></i> Contacts
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="/" target="_blank" class="nav-link">
+                                <i class="bi bi-globe me-2"></i> View Site
+                            </a>
+                        </li>
+                        <li class="nav-item mt-4">
+                            <a href="/admin/logout" class="nav-link text-danger">
+                                <i class="bi bi-box-arrow-right me-2"></i> Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 main-content p-4">
+                <!-- Header Actions -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2>Projects Management</h2>
+                        <p class="text-muted">Manage your portfolio projects</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-danger me-2" id="bulkDeleteBtn" style="display: none;">
+                            <i class="bi bi-trash"></i> Delete Selected
+                        </button>
+                        <a href="/admin/projects/add" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Add Project
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Projects Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h5 class="card-title mb-0">All Projects (<%= typeof projects !== 'undefined' ? projects.length : 0 %>)</h5>
+                            </div>
+                            <div class="col-auto">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="selectAll">
+                                    <label class="form-check-label" for="selectAll">
+                                        Select All
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <% if (!projects || projects.length === 0) { %>
+                            <div class="text-center py-5">
+                                <p class="text-muted">No projects found. <a href="/admin/projects/add">Add your first project</a></p>
+                            </div>
+                        <% } else { %>
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th width="40"></th>
+                                            <th width="80">Image</th>
+                                            <th>Title</th>
+                                            <th>Type</th>
+                                            <th>Technologies</th>
+                                            <th>Status</th>
+                                            <th>Order</th>
+                                            <th width="120">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% projects.forEach(function(project) { %>
+                                            <tr>
+                                                <td>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input project-checkbox" type="checkbox" value="<%= project._id %>">
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <img src="<%= project.mainImage %>" alt="<%= project.title %>" 
+                                                         class="img-thumbnail" style="width: 60px; height: 40px; object-fit: cover;">
+                                                </td>
+                                                <td>
+                                                    <h6 class="mb-1"><%= project.title %></h6>
+                                                    <small class="text-muted"><%= project.description.substring(0, 80) %>...</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-info"><%= project.technologies.projectType %></span>
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex flex-wrap gap-1">
+                                                        <% if (project.technologies.frameworks) { %>
+                                                            <% project.technologies.frameworks.forEach(function(fw) { %>
+                                                                <span class="badge bg-secondary"><%= fw %></span>
+                                                            <% }); %>
+                                                        <% } %>
+                                                        <% if (project.technologies.languages) { %>
+                                                            <% project.technologies.languages.forEach(function(lang) { %>
+                                                                <span class="badge bg-primary"><%= lang %></span>
+                                                            <% }); %>
+                                                        <% } %>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span class="badge <%= 
+                                                        project.status === 'published' ? 'bg-success' : 
+                                                        project.status === 'draft' ? 'bg-warning' : 'bg-secondary'
+                                                    %>"><%= project.status %></span>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-outline-dark"><%= project.order || 0 %></span>
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group btn-group-sm">
+                                                        <a href="/admin/projects/edit/<%= project._id %>" class="btn btn-outline-primary">
+                                                            <i class="bi bi-pencil"></i>
+                                                        </a>
+                                                        <button class="btn btn-outline-danger delete-project" data-id="<%= project._id %>">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+
+                <!-- Delete Confirmation Modal -->
+                <div class="modal fade" id="deleteModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Confirm Delete</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to delete this project? This action cannot be undone.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bulk Delete Modal -->
+                <div class="modal fade" id="bulkDeleteModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Confirm Bulk Delete</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to delete <span id="deleteCount"></span> selected project(s)? This action cannot be undone.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-danger" id="confirmBulkDelete">Delete Selected</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JavaScript -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let projectToDelete = null;
+        let selectedProjects = new Set();
+        
+        // Select All functionality
+        const selectAllCheckbox = document.getElementById('selectAll');
+        const projectCheckboxes = document.querySelectorAll('.project-checkbox');
+        const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
+        
+        if (selectAllCheckbox) {
+            selectAllCheckbox.addEventListener('change', function() {
+                projectCheckboxes.forEach(checkbox => {
+                    checkbox.checked = this.checked;
+                    if (this.checked) {
+                        selectedProjects.add(checkbox.value);
+                    } else {
+                        selectedProjects.delete(checkbox.value);
+                    }
+                });
+                updateBulkDeleteButton();
+            });
+        }
+        
+        // Individual checkbox functionality
+        projectCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    selectedProjects.add(this.value);
+                } else {
+                    selectedProjects.delete(this.value);
+                }
+                
+                // Update select all checkbox state
+                if (selectAllCheckbox) {
+                    const allChecked = Array.from(projectCheckboxes).every(cb => cb.checked);
+                    const someChecked = Array.from(projectCheckboxes).some(cb => cb.checked);
+                    selectAllCheckbox.checked = allChecked;
+                    selectAllCheckbox.indeterminate = someChecked && !allChecked;
+                }
+                
+                updateBulkDeleteButton();
+            });
+        });
+        
+        function updateBulkDeleteButton() {
+            if (bulkDeleteBtn) {
+                bulkDeleteBtn.style.display = selectedProjects.size > 0 ? 'inline-block' : 'none';
+            }
+        }
+        
+        // Single Delete
+        document.querySelectorAll('.delete-project').forEach(button => {
+            button.addEventListener('click', function() {
+                projectToDelete = this.dataset.id;
+                const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+                deleteModal.show();
+            });
+        });
+        
+        // Confirm single delete
+        const confirmDeleteBtn = document.getElementById('confirmDelete');
+        if (confirmDeleteBtn) {
+            confirmDeleteBtn.addEventListener('click', function() {
+                if (projectToDelete) {
+                    fetch(`/admin/projects/delete/${projectToDelete}`, {
+                        method: 'DELETE',
+                        credentials: 'same-origin'
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            location.reload();
+                        } else {
+                            alert('Failed to delete project');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Failed to delete project');
+                    });
+                }
+            });
+        }
+        
+        // Bulk Delete
+        if (bulkDeleteBtn) {
+            bulkDeleteBtn.addEventListener('click', function() {
+                document.getElementById('deleteCount').textContent = selectedProjects.size;
+                const bulkDeleteModal = new bootstrap.Modal(document.getElementById('bulkDeleteModal'));
+                bulkDeleteModal.show();
+            });
+        }
+        
+        // Confirm bulk delete
+        const confirmBulkDeleteBtn = document.getElementById('confirmBulkDelete');
+        if (confirmBulkDeleteBtn) {
+            confirmBulkDeleteBtn.addEventListener('click', function() {
+                const projectIds = Array.from(selectedProjects);
+                
+                Promise.all(projectIds.map(id => 
+                    fetch(`/admin/projects/delete/${id}`, { method: 'DELETE', credentials: 'same-origin' })
+                ))
+                .then(responses => {
+                    const allSuccessful = responses.every(response => response.ok);
+                    if (allSuccessful) {
+                        location.reload();
+                    } else {
+                        alert('Some projects could not be deleted');
+                        location.reload();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to delete projects');
+                });
+            });
+        }
+    });
+    </script>
+</body>
+</html>

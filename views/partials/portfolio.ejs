@@ -15,52 +15,269 @@
 
             <!-- Dropdown Filters -->
             <div class="portfolio-dropdown-filters" data-aos="fade-up" data-aos-delay="100">
+                <style>
+                    .custom-dropdown {
+                        position: relative;
+                    }
+                    
+                    .custom-dropdown .dropdown-menu {
+                        position: absolute !important;
+                        top: 100% !important;
+                        left: 0 !important;
+                        right: 0 !important;
+                        width: 100% !important;
+                        min-width: 100% !important;
+                        max-width: 100% !important;
+                        transform: none !important;
+                        border: 1px solid #dee2e6;
+                        border-radius: 0.375rem;
+                        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+                        padding: 0.5rem 0;
+                        margin: 0 !important;
+                        inset: auto !important;
+                    }
+                    
+                    .custom-dropdown .dropdown-item {
+                        padding: 0.5rem 1rem;
+                        display: flex;
+                        align-items: center;
+                        transition: all 0.2s ease;
+                        white-space: nowrap;
+                        border: none;
+                    }
+                    
+                    .custom-dropdown .dropdown-item:hover {
+                        background-color: #f8f9fa;
+                        color: #149ddd;
+                    }
+                    
+                    .custom-dropdown .dropdown-item:active {
+                        background-color: #149ddd;
+                        color: white;
+                    }
+                    
+                    .custom-dropdown .dropdown-item i {
+                        margin-right: 8px;
+                        width: 16px;
+                        text-align: center;
+                        color: #149ddd;
+                        font-size: 14px;
+                    }
+                    
+                    .custom-dropdown .dropdown-item:hover i {
+                        color: #149ddd;
+                    }
+                    
+                    .custom-dropdown .dropdown-item:active i {
+                        color: white;
+                    }
+                    
+                    .custom-dropdown .btn {
+                        background-color: white;
+                        border: 1px solid #ced4da;
+                        color: #495057;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        padding: 0.5rem 1rem;
+                        height: 38px;
+                    }
+                    
+                    .custom-dropdown .btn:hover {
+                        background-color: #f8f9fa;
+                        border-color: #149ddd;
+                    }
+                    
+                    .custom-dropdown .btn:focus {
+                        background-color: white;
+                        border-color: #149ddd;
+                        box-shadow: 0 0 0 0.2rem rgba(20, 157, 221, 0.25);
+                    }
+                    
+                    .custom-dropdown .btn i {
+                        margin-right: 8px;
+                        color: #149ddd;
+                        font-size: 14px;
+                    }
+                    
+                    .portfolio-dropdown-filters .btn i {
+                        margin-right: 6px;
+                    }
+                    
+                    /* ปรับ dropdown arrow */
+                    .custom-dropdown .btn::after {
+                        margin-left: auto;
+                    }
+                    
+                    /* จำกัดขนาด dropdown container */
+                    .portfolio-dropdown-filters .col-md-3 {
+                        position: relative;
+                        overflow: visible;
+                    }
+                    
+                    /* Force dropdown positioning */
+                    .custom-dropdown .dropdown-menu.show {
+                        position: absolute !important;
+                        top: 100% !important;
+                        left: 0 !important;
+                        right: 0 !important;
+                        width: 100% !important;
+                        transform: none !important;
+                        margin: 0 !important;
+                        inset: auto !important;
+                    }
+                    
+                    /* Action Buttons Styling */
+                    .portfolio-dropdown-filters .btn {
+                        height: 38px;
+                        font-size: 14px;
+                        font-weight: 500;
+                        border-radius: 0.375rem;
+                        transition: all 0.2s ease;
+                        padding: 0.375rem 0.75rem;
+                        line-height: 1.5;
+                    }
+                    
+                    /* Ensure all elements align properly */
+                    .portfolio-dropdown-filters .custom-dropdown .btn,
+                    .portfolio-dropdown-filters .d-flex .btn {
+                        height: 38px;
+                        min-height: 38px;
+                        max-height: 38px;
+                    }
+                    
+                    .portfolio-dropdown-filters .btn:hover {
+                        transform: translateY(-1px);
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+                    }
+                    
+                    .portfolio-dropdown-filters .btn i {
+                        font-size: 14px;
+                    }
+                    
+                    .portfolio-dropdown-filters .btn-outline-secondary:hover {
+                        background-color: #6c757d;
+                        border-color: #6c757d;
+                        color: white;
+                    }
+                    
+                    .portfolio-dropdown-filters .btn-primary {
+                        background-color: #149ddd;
+                        border-color: #149ddd;
+                    }
+                    
+                    .portfolio-dropdown-filters .btn-primary:hover {
+                        background-color: #0d7aa7;
+                        border-color: #0d7aa7;
+                    }
+                </style>
                 <div class="row g-3 mb-4">
                     <!-- Project Type Dropdown -->
                     <div class="col-md-3">
-                        <select class="form-select portfolio-filter-dropdown" data-filter-group="type">
-                            <option value="*">🗂️ All Project Types</option>
-                            <option value=".filter-mobileapp">📱 Mobile Application</option>
-                            <option value=".filter-app">💻 Web Application</option>
-                            <option value=".filter-website">🌐 Website</option>
-                        </select>
+                        <div class="custom-dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start" type="button" 
+                                    data-bs-toggle="dropdown" aria-expanded="false" id="typeDropdown"
+                                    data-bs-boundary="clippingParents" data-bs-reference="parent">
+                                <i class="bi bi-folder"></i> All Project Types
+                            </button>
+                            <ul class="dropdown-menu w-100" data-filter-group="type">
+                                <li><a class="dropdown-item" href="#" data-filter="*">
+                                    <i class="bi bi-folder"></i> All Project Types
+                                </a></li>
+                                <li><a class="dropdown-item" href="#" data-filter=".filter-mobileapp">
+                                    <i class="bi bi-phone"></i> Mobile Application
+                                </a></li>
+                                <li><a class="dropdown-item" href="#" data-filter=".filter-app">
+                                    <i class="bi bi-laptop"></i> Web Application
+                                </a></li>
+                                <li><a class="dropdown-item" href="#" data-filter=".filter-website">
+                                    <i class="bi bi-globe"></i> Website
+                                </a></li>
+                            </ul>
+                        </div>
                     </div>
                     
                     <!-- Framework Dropdown -->
                     <div class="col-md-3">
-                        <select class="form-select portfolio-filter-dropdown" data-filter-group="framework">
-                            <option value="*">🔧 All Frameworks</option>
-                            <option value=".filter-react">⚛️ React</option>
-                            <option value=".filter-nextjs">▲ Next.js</option>
-                            <option value=".filter-aspnet">🔷 ASP.NET</option>
-                            <option value=".filter-reactnative">📱 React Native</option>
-                            <option value=".filter-django">🎯 Django</option>
-                            <option value=".filter-ejs">📄 EJS/Express</option>
-                        </select>
+                        <div class="custom-dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start" type="button" 
+                                    data-bs-toggle="dropdown" aria-expanded="false" id="frameworkDropdown"
+                                    data-bs-boundary="clippingParents" data-bs-reference="parent">
+                                <i class="bi bi-tools"></i> All Frameworks
+                            </button>
+                            <ul class="dropdown-menu w-100" data-filter-group="framework">
+                                <li><a class="dropdown-item" href="#" data-filter="*">
+                                    <i class="bi bi-tools"></i> All Frameworks
+                                </a></li>
+                                <li><a class="dropdown-item" href="#" data-filter=".filter-react">
+                                    <i class="bi bi-circle"></i> React
+                                </a></li>
+                                <li><a class="dropdown-item" href="#" data-filter=".filter-nextjs">
+                                    <i class="bi bi-triangle"></i> Next.js
+                                </a></li>
+                                <li><a class="dropdown-item" href="#" data-filter=".filter-aspnet">
+                                    <i class="bi bi-window"></i> ASP.NET
+                                </a></li>
+                                <li><a class="dropdown-item" href="#" data-filter=".filter-reactnative">
+                                    <i class="bi bi-phone"></i> React Native
+                                </a></li>
+                                <li><a class="dropdown-item" href="#" data-filter=".filter-django">
+                                    <i class="bi bi-code-square"></i> Django
+                                </a></li>
+                                <li><a class="dropdown-item" href="#" data-filter=".filter-ejs">
+                                    <i class="bi bi-file-text"></i> EJS/Express
+                                </a></li>
+                            </ul>
+                        </div>
                     </div>
                     
                     <!-- Programming Language Dropdown -->
                     <div class="col-md-3">
-                        <select class="form-select portfolio-filter-dropdown" data-filter-group="language">
-                            <option value="*">💻 All Languages</option>
-                            <option value=".filter-javascript">🟨 JavaScript</option>
-                            <option value=".filter-typescript">🔷 TypeScript</option>
-                            <option value=".filter-nodejs">🟢 Node.js</option>
-                            <option value=".filter-csharp">🔵 C#</option>
-                            <option value=".filter-python">🐍 Python</option>
-                            <option value=".filter-go">🐹 Go</option>
-                            <option value=".filter-bun">🍞 Bun</option>
-                        </select>
+                        <div class="custom-dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start" type="button" 
+                                    data-bs-toggle="dropdown" aria-expanded="false" id="languageDropdown"
+                                    data-bs-boundary="clippingParents" data-bs-reference="parent">
+                                <i class="bi bi-code-slash"></i> All Languages
+                            </button>
+                            <ul class="dropdown-menu w-100" data-filter-group="language">
+                                <li><a class="dropdown-item" href="#" data-filter="*">
+                                    <i class="bi bi-code-slash"></i> All Languages
+                                </a></li>
+                                <li><a class="dropdown-item" href="#" data-filter=".filter-javascript">
+                                    <i class="bi bi-filetype-js"></i> JavaScript
+                                </a></li>
+                                <li><a class="dropdown-item" href="#" data-filter=".filter-typescript">
+                                    <i class="bi bi-braces"></i> TypeScript
+                                </a></li>
+                                <li><a class="dropdown-item" href="#" data-filter=".filter-nodejs">
+                                    <i class="bi bi-server"></i> Node.js
+                                </a></li>
+                                <li><a class="dropdown-item" href="#" data-filter=".filter-csharp">
+                                    <i class="bi bi-file-code"></i> C#
+                                </a></li>
+                                <li><a class="dropdown-item" href="#" data-filter=".filter-python">
+                                    <i class="bi bi-file-code"></i> Python
+                                </a></li>
+                                <li><a class="dropdown-item" href="#" data-filter=".filter-go">
+                                    <i class="bi bi-code"></i> Go
+                                </a></li>
+                                <li><a class="dropdown-item" href="#" data-filter=".filter-bun">
+                                    <i class="bi bi-cup-hot"></i> Bun
+                                </a></li>
+                            </ul>
+                        </div>
                     </div>
                     
                     <!-- Quick Actions -->
                     <div class="col-md-3">
                         <div class="d-flex gap-2">
-                            <button class="btn btn-outline-primary btn-sm flex-fill" id="resetFilters">
-                                🔄 Reset All
+                            <button class="btn btn-outline-secondary btn-sm flex-fill d-flex align-items-center justify-content-center" id="resetFilters">
+                                <i class="bi bi-arrow-clockwise me-1"></i>
+                                <span>Reset All</span>
                             </button>
-                            <button class="btn btn-primary btn-sm flex-fill" data-filter="*" id="showAll">
-                                👁️ Show All
+                            <button class="btn btn-primary btn-sm flex-fill d-flex align-items-center justify-content-center" data-filter="*" id="showAll">
+                                <i class="bi bi-eye me-1"></i>
+                                <span>Show All</span>
                             </button>
                         </div>
                     </div>
@@ -69,29 +286,75 @@
             
             <!-- Traditional Filter Buttons (Hidden by default, can be toggled) -->
             <div class="traditional-filters" style="display: none;">
-                <ul class="portfolio-filters isotope-filters" data-aos="fade-up" data-aos-delay="100">
-                    <li data-filter="*" class="filter-active">All</li>
-                    <li data-filter=".filter-mobileapp">Mobile App</li>
-                    <li data-filter=".filter-app">Application</li>
-                    <li data-filter=".filter-website">Website</li>
-                    <li data-filter=".filter-aspnet">ASP.NET</li>
-                    <li data-filter=".filter-react">React</li>
-                    <li data-filter=".filter-nextjs">Next.JS</li>
-                    <li data-filter=".filter-ejs">EJS</li>
+            <ul class="portfolio-filters isotope-filters" data-aos="fade-up" data-aos-delay="100">
+                <li data-filter="*" class="filter-active">All</li>
+                <li data-filter=".filter-mobileapp">Mobile App</li>
+                <li data-filter=".filter-app">Application</li>
+                <li data-filter=".filter-website">Website</li>
+                <li data-filter=".filter-aspnet">ASP.NET</li>
+                <li data-filter=".filter-react">React</li>
+                <li data-filter=".filter-nextjs">Next.JS</li>
+                <li data-filter=".filter-ejs">EJS</li>
                     <li data-filter=".filter-javascript">JavaScript</li>
                     <li data-filter=".filter-typescript">TypeScript</li>
-                    <li data-filter=".filter-csharp">C#</li>
-                    <li data-filter=".filter-python">Python</li>
+                <li data-filter=".filter-csharp">C#</li>
+                <li data-filter=".filter-python">Python</li>
                     <li data-filter=".filter-django">Django</li>
-                    <li data-filter=".filter-nodejs">Node.JS</li>               
-                    <li data-filter=".filter-go">GO</li>
-                    <li data-filter=".filter-bun">Bun</li>
-                    <li data-filter=".filter-reactnative">React Native</li>
+                <li data-filter=".filter-nodejs">Node.JS</li>               
+                <li data-filter=".filter-go">GO</li>
+                <li data-filter=".filter-bun">Bun</li>
+                <li data-filter=".filter-reactnative">React Native</li>
                 </ul>
             </div><!-- End Portfolio Filters -->
 
             <div class="row gy-4 isotope-container" data-aos="fade-up" data-aos-delay="200">
 
+                <!-- Dynamic Projects from Database -->
+                <% if (typeof projects !== 'undefined' && projects.length > 0) { %>
+                    <% projects.forEach(function(project, index) { %>
+                        <div class="col-lg-4 col-md-6 portfolio-item isotope-item 
+                             filter-<%= project.technologies.projectType %>
+                             <% project.technologies.frameworks.forEach(function(fw) { %> filter-<%= fw %><% }); %>
+                             <% project.technologies.languages.forEach(function(lang) { %> filter-<%= lang %><% }); %>">
+                            <div class="portfolio-content h-100">
+                                <img src="<%= project.mainImage %>" class="img-fluid" alt="<%= project.title %>">
+                                <div class="portfolio-info">
+                                    <h4><%= project.title %></h4>
+                                    <p><%- project.description %></p>
+                                    
+                                    <!-- Gallery Links -->
+                                    <% if (project.galleryImages && project.galleryImages.length > 0) { %>
+                                        <a href="<%= project.galleryImages[0] %>" title="See Details"
+                                           data-gallery="portfolio-gallery-db-<%= index %>" class="glightbox preview-link">
+                                            <i class="bi bi-zoom-in"></i>
+                                        </a>
+                                        <% project.galleryImages.slice(1).forEach(function(img) { %>
+                                            <a href="<%= img %>" data-gallery="portfolio-gallery-db-<%= index %>" 
+                                               class="glightbox d-none"></a>
+                                        <% }); %>
+                                    <% } else { %>
+                                        <a href="<%= project.mainImage %>" title="See Details"
+                                           data-gallery="portfolio-gallery-db-<%= index %>" class="glightbox preview-link">
+                                            <i class="bi bi-zoom-in"></i>
+                                        </a>
+                                    <% } %>
+                                    
+                                    <!-- Project Links -->
+                                    <a href="<%= project.links.github %>" target="_blank"
+                                       title="Github Link" class="details-link">
+                                        <i class="bi bi-link-45deg"></i>
+                                    </a>
+                                    <a href="<%= project.links.liveDemo %>" target="_blank"
+                                       title="Live Demo" class="live-demo-link">
+                                        <i class="bi bi-play-circle"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div><!-- End Portfolio Item -->
+                    <% }); %>
+                <% } %>
+
+                <!-- Static Projects (Original 6 projects) -->
                 <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app filter-react filter-nodejs filter-javascript">
                     <div class="portfolio-content h-100">
                         <img src="assets/img/portfolio/app-1-1.png" class="img-fluid" alt="">
@@ -244,184 +507,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- End Portfolio Item -->
-
-                <!-- <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
-                    <div class="portfolio-content h-100">
-                        <img src="assets/img/portfolio/product-1.jpg" class="img-fluid" alt="">
-                        <div class="portfolio-info">
-                            <h4>Product 1</h4>
-                            <p>Lorem ipsum, dolor sit amet consectetur</p>
-                            <a href="assets/img/portfolio/product-1.jpg" title="Product 1"
-                                data-gallery="portfolio-gallery-product" class="glightbox preview-link"><i
-                                    class="bi bi-zoom-in"></i></a>
-                            <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                                    class="bi bi-link-45deg"></i></a>
-                        </div>
-                    </div>
-                </div><!-- End Portfolio Item -->
-
-                <!--
-                <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-branding">
-                    <div class="portfolio-content h-100">
-                        <img src="assets/img/portfolio/branding-1.jpg" class="img-fluid" alt="">
-                        <div class="portfolio-info">
-                            <h4>Branding 1</h4>
-                            <p>Lorem ipsum, dolor sit amet consectetur</p>
-                            <a href="assets/img/portfolio/branding-1.jpg" title="Branding 1"
-                                data-gallery="portfolio-gallery-branding" class="glightbox preview-link"><i
-                                    class="bi bi-zoom-in"></i></a>
-                            <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                                    class="bi bi-link-45deg"></i></a>
-                        </div>
-                    </div>
-                </div><!-- End Portfolio Item -->
-
-                <!--
-                <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-books">
-                    <div class="portfolio-content h-100">
-                        <img src="assets/img/portfolio/books-1.jpg" class="img-fluid" alt="">
-                        <div class="portfolio-info">
-                            <h4>Books 1</h4>
-                            <p>Lorem ipsum, dolor sit amet consectetur</p>
-                            <a href="assets/img/portfolio/books-1.jpg" title="Branding 1"
-                                data-gallery="portfolio-gallery-book" class="glightbox preview-link"><i
-                                    class="bi bi-zoom-in"></i></a>
-                            <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                                    class="bi bi-link-45deg"></i></a>
-                        </div>
-                    </div>
-                </div><!-- End Portfolio Item -->
-
-                <!--
-                <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
-                    <div class="portfolio-content h-100">
-                        <img src="assets/img/portfolio/app-2.jpg" class="img-fluid" alt="">
-                        <div class="portfolio-info">
-                            <h4>App 2</h4>
-                            <p>Lorem ipsum, dolor sit amet consectetur</p>
-                            <a href="assets/img/portfolio/app-2.jpg" title="App 2"
-                                data-gallery="portfolio-gallery-app" class="glightbox preview-link"><i
-                                    class="bi bi-zoom-in"></i></a>
-                            <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                                    class="bi bi-link-45deg"></i></a>
-                        </div>
-                    </div>
-                </div><!-- End Portfolio Item -->
-
-                <!--
-                <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
-                    <div class="portfolio-content h-100">
-                        <img src="assets/img/portfolio/product-2.jpg" class="img-fluid" alt="">
-                        <div class="portfolio-info">
-                            <h4>Product 2</h4>
-                            <p>Lorem ipsum, dolor sit amet consectetur</p>
-                            <a href="assets/img/portfolio/product-2.jpg" title="Product 2"
-                                data-gallery="portfolio-gallery-product" class="glightbox preview-link"><i
-                                    class="bi bi-zoom-in"></i></a>
-                            <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                                    class="bi bi-link-45deg"></i></a>
-                        </div>
-                    </div>
-                </div><!-- End Portfolio Item -->
-
-                <!--
-                <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-branding">
-                    <div class="portfolio-content h-100">
-                        <img src="assets/img/portfolio/branding-2.jpg" class="img-fluid" alt="">
-                        <div class="portfolio-info">
-                            <h4>Branding 2</h4>
-                            <p>Lorem ipsum, dolor sit amet consectetur</p>
-                            <a href="assets/img/portfolio/branding-2.jpg" title="Branding 2"
-                                data-gallery="portfolio-gallery-branding" class="glightbox preview-link"><i
-                                    class="bi bi-zoom-in"></i></a>
-                            <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                                    class="bi bi-link-45deg"></i></a>
-                        </div>
-                    </div>
-                </div><!-- End Portfolio Item -->
-
-                <!--
-                <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-books">
-                    <div class="portfolio-content h-100">
-                        <img src="assets/img/portfolio/books-2.jpg" class="img-fluid" alt="">
-                        <div class="portfolio-info">
-                            <h4>Books 2</h4>
-                            <p>Lorem ipsum, dolor sit amet consectetur</p>
-                            <a href="assets/img/portfolio/books-2.jpg" title="Branding 2"
-                                data-gallery="portfolio-gallery-book" class="glightbox preview-link"><i
-                                    class="bi bi-zoom-in"></i></a>
-                            <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                                    class="bi bi-link-45deg"></i></a>
-                        </div>
-                    </div>
-                </div><!-- End Portfolio Item -->
-
-                <!--
-                <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
-                    <div class="portfolio-content h-100">
-                        <img src="assets/img/portfolio/app-3.jpg" class="img-fluid" alt="">
-                        <div class="portfolio-info">
-                            <h4>App 3</h4>
-                            <p>Lorem ipsum, dolor sit amet consectetur</p>
-                            <a href="assets/img/portfolio/app-3.jpg" title="App 3"
-                                data-gallery="portfolio-gallery-app" class="glightbox preview-link"><i
-                                    class="bi bi-zoom-in"></i></a>
-                            <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                                    class="bi bi-link-45deg"></i></a>
-                        </div>
-                    </div>
-                </div><!-- End Portfolio Item -->
-
-                <!--
-                <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
-                    <div class="portfolio-content h-100">
-                        <img src="assets/img/portfolio/product-3.jpg" class="img-fluid" alt="">
-                        <div class="portfolio-info">
-                            <h4>Product 3</h4>
-                            <p>Lorem ipsum, dolor sit amet consectetur</p>
-                            <a href="assets/img/portfolio/product-3.jpg" title="Product 3"
-                                data-gallery="portfolio-gallery-product" class="glightbox preview-link"><i
-                                    class="bi bi-zoom-in"></i></a>
-                            <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                                    class="bi bi-link-45deg"></i></a>
-                        </div>
-                    </div>
-                </div><!-- End Portfolio Item -->
-
-                <!--
-                <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-branding">
-                    <div class="portfolio-content h-100">
-                        <img src="assets/img/portfolio/branding-3.jpg" class="img-fluid" alt="">
-                        <div class="portfolio-info">
-                            <h4>Branding 3</h4>
-                            <p>Lorem ipsum, dolor sit amet consectetur</p>
-                            <a href="assets/img/portfolio/branding-3.jpg" title="Branding 2"
-                                data-gallery="portfolio-gallery-branding" class="glightbox preview-link"><i
-                                    class="bi bi-zoom-in"></i></a>
-                            <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                                    class="bi bi-link-45deg"></i></a>
-                        </div>
-                    </div>
-                </div><!-- End Portfolio Item -->
-
-                <!--
-                <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-books">
-                    <div class="portfolio-content h-100">
-                        <img src="assets/img/portfolio/books-3.jpg" class="img-fluid" alt="">
-                        <div class="portfolio-info">
-                            <h4>Books 3</h4>
-                            <p>Lorem ipsum, dolor sit amet consectetur</p>
-                            <a href="assets/img/portfolio/books-3.jpg" title="Branding 3"
-                                data-gallery="portfolio-gallery-book" class="glightbox preview-link"><i
-                                    class="bi bi-zoom-in"></i></a>
-                            <a href="portfolio-details.html" title="More Details" class="details-link"><i
-                                    class="bi bi-link-45deg"></i></a>
-                        </div>
-                    </div>
-                </div>
-                -->
 
             </div><!-- End Portfolio Container -->
 

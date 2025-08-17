@@ -1,12 +1,14 @@
 import express from 'express';
 import router from './routes/routes.js';
+import adminRouter from './routes/adminRoutes.js';
 import connectDB from './db/connectDB.js';
 import bodyParser from 'body-parser';
+import session from 'express-session';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-// Load environment variables
+// Configure dotenv
 dotenv.config();
 
 const app = express();
@@ -15,6 +17,17 @@ const port = process.env.PORT || 3000;
 // กำหนดให้ Express ใช้งาน body-parser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+// Session configuration
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'portfolio-admin-secret-key-2024',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { 
+        secure: false, // set to true in production with HTTPS
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+}));
 
 // กำหนดการเชื่อมต่อฐานข้อมูล
 const DATABASEURL = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/portfolio';
@@ -41,6 +54,7 @@ app.set('views', './views');
 
 // // สร้างเส้นทางสำหรับเรียกใช้งาน
 app.use('/', router);
+app.use('/admin', adminRouter);
 
 // // เริ่มเซิร์ฟเวอร์และฟังที่พอร์ตที่กำหนด
 app.listen(port, () => {

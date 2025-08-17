@@ -6,7 +6,12 @@
     "start": "node index.js",
     "server": "nodemon index.js"
   },
-  "keywords": ["portfolio", "nodejs", "express", "mongodb"],
+  "keywords": [
+    "portfolio",
+    "nodejs",
+    "express",
+    "mongodb"
+  ],
   "author": "Sanya Bochoun",
   "license": "ISC",
   "type": "module",
@@ -17,10 +22,13 @@
   },
   "dependencies": {
     "body-parser": "^1.20.3",
-    "dotenv": "^16.4.7",
+    "dotenv": "^16.6.1",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
-    "mongoose": "^8.9.7"
+    "express-session": "^1.18.2",
+    "mongoose": "^8.9.7",
+    "multer": "^2.0.2",
+    "nodemailer": "^7.0.5"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
